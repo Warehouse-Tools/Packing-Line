@@ -337,7 +337,7 @@
     <span class="timer-badge" id="floatTime">00:00:00</span>
     <div class="float-actions">
       <button onclick="minimizeFloat()" title="Minimize" id="minimizeBtn">─</button>
-      <button class="close-float" onclick="closeFloat()" title="Tutup">✕</button>
+      <button class="close-float" onclick="closeFloatWithBack()" title="Kembali ke Login">✕</button>
     </div>
   </div>
   <div class="float-body">
@@ -350,7 +350,7 @@
     <div class="session-id" id="fSessionId">🆔 Session ID: -</div>
     <div class="btn-group">
       <button class="btn-request-tab" onclick="requestNewTabToTL()">📩 Request Tab Baru ke TL</button>
-      <button class="btn-back-main" onclick="closeFloat()">⬅️ Kembali ke Login</button>
+      <button class="btn-back-main" onclick="closeFloatWithBack()">⬅️ Kembali ke Login</button>
       <button class="btn-check" onclick="checkSessionManually()">🔍 CEK SESSION MANUAL</button>
       <button class="btn-logout" onclick="performLogout()">🔒 LOGOUT / AKHIRI SESI</button>
     </div>
@@ -444,7 +444,11 @@
     floatMinimized = false;
     document.getElementById('minimizeBtn').textContent = '─';
     updateFloatTimer();
-    if (durationInterval) clearInterval(durationInterval);
+    // Hentikan timer lama jika ada
+    if (durationInterval) {
+      clearInterval(durationInterval);
+      durationInterval = null;
+    }
     durationInterval = setInterval(updateFloatTimer, 1000);
   }
 
@@ -475,11 +479,18 @@
     }
   }
 
-  function closeFloat() {
+  // ===== CLOSE FLOAT DENGAN KEMBALI KE LOGIN =====
+  function closeFloatWithBack() {
+    // Hentikan timer
+    if (durationInterval) {
+      clearInterval(durationInterval);
+      durationInterval = null;
+    }
+    // Tutup float
     document.getElementById('floatTimer').classList.remove('active');
-    if (durationInterval) clearInterval(durationInterval);
-    durationInterval = null;
+    // Tutup browser
     closeBrowserTab();
+    // Kembali ke tab staff
     switchTab('staff');
     showToast('⬅️ Kembali ke halaman login');
   }
@@ -938,8 +949,10 @@
       isLoggingOut = false;
       if(r.success){
         showMessage(r.message,'success');
-        if (durationInterval) clearInterval(durationInterval);
-        durationInterval = null;
+        if (durationInterval) {
+          clearInterval(durationInterval);
+          durationInterval = null;
+        }
         clearSavedSession();
         currentSession = null;
         document.getElementById('floatTimer').classList.remove('active');
@@ -1037,8 +1050,10 @@
         alert('✅ Session masih aktif di server!\n\nSession ID: ' + currentSession.id);
       } else if(all.length > 0) {
         alert('⚠️ Sesi anda TIDAK DITEMUKAN di server!\nAnda mungkin sudah di-force logout oleh Team Leader.');
-        if (durationInterval) clearInterval(durationInterval);
-        durationInterval = null;
+        if (durationInterval) {
+          clearInterval(durationInterval);
+          durationInterval = null;
+        }
         clearSavedSession();
         currentSession = null;
         document.getElementById('floatTimer').classList.remove('active');
@@ -1109,7 +1124,8 @@
       localStorage.setItem('tlPw', pw.trim());
       localStorage.setItem('tlWH', v.warehouse);
       localStorage.setItem('openDashboard', 'true');
-      window.open(API_URL, '_blank');
+      // Buka dashboard di tab baru dengan URL yang sama
+      window.open(window.location.href.split('?')[0], '_blank');
     })
   }
 
