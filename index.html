@@ -38,6 +38,7 @@
     .session-card { background: #f8fafc; padding: 20px; border-radius: 12px; margin: 12px 0; border-left: 4px solid #1a73e8; }
     .session-id-display { background: #f0f0f0; padding: 5px 10px; border-radius: 4px; font-size: 11px; color: #666; text-align: center; margin-top: 5px; }
     .btn-check-session { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: 700; }
+    .btn-back-browser { background: linear-gradient(135deg, #795548 0%, #5d4037 100%); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: 700; }
     .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #e53935; color: white; padding: 15px 30px; border-radius: 10px; font-weight: 700; font-size: 16px; z-index: 10000; box-shadow: 0 4px 20px rgba(229,57,53,0.4); display: none; animation: slideDown 0.5s ease; }
     .toast.show { display: block; }
     @keyframes slideDown { from { top: -100px; opacity: 0; } to { top: 20px; opacity: 1; } }
@@ -138,7 +139,7 @@
     }
     .float-body .btn-group button:hover { opacity: 0.9; transform: scale(1.01); }
     .float-body .btn-group .btn-request-tab { background: #ff9800; color: white; }
-    .float-body .btn-group .btn-back-main { background: #795548; color: white; }
+    .float-body .btn-group .btn-back-browser { background: #795548; color: white; }
     .float-body .btn-group .btn-check { background: #1a73e8; color: white; }
     .float-body .btn-group .btn-logout { background: #e53935; color: white; }
     
@@ -221,6 +222,7 @@
       width: 100%;
       height: 100%;
       border: none;
+      background: white;
     }
     .browser-content .loading {
       position: absolute;
@@ -243,21 +245,24 @@
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     
-    .browser-content .error-msg {
+    .browser-content .error-container {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      color: #666;
-      padding: 30px;
-      max-width: 400px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      flex-direction: column;
+      padding: 20px;
+      text-align: center;
     }
-    .browser-content .error-msg .icon { font-size: 48px; margin-bottom: 10px; }
-    .browser-content .error-msg .open-link {
+    .browser-content .error-container .icon { font-size: 48px; margin-bottom: 10px; }
+    .browser-content .error-container h3 { color: #333; margin-bottom: 10px; }
+    .browser-content .error-container p { color: #666; margin-bottom: 15px; max-width: 400px; }
+    .browser-content .error-container .open-link {
       display: inline-block;
       background: #1a73e8;
       color: white;
@@ -265,12 +270,11 @@
       border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
-      margin-top: 10px;
       cursor: pointer;
       border: none;
       font-size: 14px;
     }
-    .browser-content .error-msg .open-link:hover { background: #1557b0; }
+    .browser-content .error-container .open-link:hover { background: #1557b0; }
 
     @media (max-width: 600px) {
       #floatTimer { min-width: 240px; right: 10px; bottom: 10px; }
@@ -321,10 +325,10 @@
       <div class="spinner"></div>
       <div>🌐 Memuat halaman...</div>
     </div>
-    <div class="error-msg" id="browserError" style="display:none;">
+    <div class="error-container" id="browserError">
       <div class="icon">🔒</div>
       <h3>Situs tidak bisa ditampilkan di sini</h3>
-      <p style="margin:10px 0;">Beberapa situs (seperti Google) melarang tampil di dalam bingkai.</p>
+      <p>Beberapa situs (seperti Google) melarang tampil di dalam bingkai.</p>
       <button class="open-link" onclick="openInNewTab()">📂 Buka di Tab Baru</button>
     </div>
   </div>
@@ -337,7 +341,7 @@
     <span class="timer-badge" id="floatTime">00:00:00</span>
     <div class="float-actions">
       <button onclick="minimizeFloat()" title="Minimize" id="minimizeBtn">─</button>
-      <button class="close-float" onclick="closeFloatWithBack()" title="Kembali">✕</button>
+      <button class="close-float" onclick="closeFloat()" title="Tutup">✕</button>
     </div>
   </div>
   <div class="float-body">
@@ -350,7 +354,7 @@
     <div class="session-id" id="fSessionId">🆔 Session ID: -</div>
     <div class="btn-group">
       <button class="btn-request-tab" onclick="requestNewTabToTL()">📩 Request Tab Baru ke TL</button>
-      <button class="btn-back-main" onclick="closeFloatWithBack()">⬅️ Kembali ke Login</button>
+      <button class="btn-back-browser" onclick="goToBrowserTab()">⬅️ Kembali ke Browser</button>
       <button class="btn-check" onclick="checkSessionManually()">🔍 CEK SESSION</button>
       <button class="btn-logout" onclick="performLogout()">🔒 LOGOUT</button>
     </div>
@@ -426,6 +430,7 @@
   var browserHistory = [];
   var browserHistoryIndex = -1;
   var floatDragData = { isDragging: false, offsetX: 0, offsetY: 0 };
+  var browserIsOpen = false;
 
   // ============ TOAST ============
   function showToast(msg) {
@@ -440,6 +445,7 @@
   function openBrowserTab() {
     var bt = document.getElementById('browserTab');
     bt.classList.add('active');
+    browserIsOpen = true;
     browserNavigate('https://www.google.com');
     showToast('🌐 Browser terbuka');
   }
@@ -448,6 +454,18 @@
     document.getElementById('browserTab').classList.remove('active');
     document.getElementById('browserError').style.display = 'none';
     document.getElementById('browserLoading').style.display = 'none';
+    browserIsOpen = false;
+  }
+
+  function goToBrowserTab() {
+    if (browserIsOpen) {
+      // Browser sudah terbuka, fokus ke tab browser
+      document.getElementById('browserTab').classList.add('active');
+      showToast('⬅️ Kembali ke browser');
+    } else {
+      // Browser belum terbuka, buka baru
+      openBrowserTab();
+    }
   }
 
   function browserNavigate(url) {
@@ -469,20 +487,39 @@
     
     iframe.onload = function() {
       loading.style.display = 'none';
+      // Cek jika iframe error karena X-Frame-Options
       try {
         var doc = iframe.contentDocument || iframe.contentWindow.document;
-        if (doc && doc.body && doc.body.innerHTML.indexOf('ERR_BLOCKED_BY_X_FRAME_OPTIONS') > -1) {
-          error.style.display = 'block';
-          iframe.style.display = 'none';
+        if (doc && doc.body) {
+          var html = doc.body.innerHTML || '';
+          if (html.indexOf('ERR_BLOCKED_BY_X_FRAME_OPTIONS') > -1 || 
+              html.indexOf('refused to connect') > -1 ||
+              html.indexOf('This page can\'t be displayed') > -1) {
+            error.style.display = 'flex';
+            iframe.style.display = 'none';
+          }
         }
       } catch(e) {
+        // Cross-origin error - iframe berhasil tapi tidak bisa diakses (normal)
         loading.style.display = 'none';
       }
+      // Jika konten kosong, tampilkan error
+      setTimeout(function() {
+        if (iframe.style.display !== 'none' && iframe.contentDocument) {
+          try {
+            var body = iframe.contentDocument.body;
+            if (body && body.innerHTML.trim() === '' || body.innerHTML.indexOf('about:blank') > -1) {
+              error.style.display = 'flex';
+              iframe.style.display = 'none';
+            }
+          } catch(e) {}
+        }
+      }, 3000);
     };
     
     iframe.onerror = function() {
       loading.style.display = 'none';
-      error.style.display = 'block';
+      error.style.display = 'flex';
       iframe.style.display = 'none';
     };
     
@@ -577,7 +614,7 @@
     }
   }
 
-  function closeFloatWithBack() {
+  function closeFloat() {
     if (durationInterval) {
       clearInterval(durationInterval);
       durationInterval = null;
@@ -1086,7 +1123,8 @@
       (currentSession.teamLeader ? '<p><strong>👨‍💼 TL:</strong> ' + currentSession.teamLeader + '</p>' : '') +
       '<p><small>🕐 Login: ' + currentSession.loginTime.toLocaleString('id-ID') + '</small></p>' +
       '<div class="session-id-display">🆔 Session ID: ' + currentSession.id + '</div>' +
-      '<button onclick="closeFloatWithBack()" style="background:linear-gradient(135deg, #795548 0%, #5d4037 100%);color:white;border:none;padding:10px;border-radius:8px;cursor:pointer;margin-top:10px;width:100%;font-weight:700;">⬅️ Kembali ke Login</button>' +
+      // ===== TOMBOL KEMBALI KE BROWSER (bukan ke login) =====
+      '<button onclick="goToBrowserTab()" class="btn-back-browser">⬅️ Kembali ke Browser</button>' +
       '<button onclick="checkSessionManually()" class="btn-check-session">🔍 CEK SESSION MANUAL</button>' +
       '<button onclick="performLogout()" class="btn-danger" style="margin-top:10px;width:100%;font-size:17px;">🔒 LOGOUT / AKHIRI SESI</button>' +
       '</div>';
