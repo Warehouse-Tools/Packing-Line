@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Packing Line Manpower Tracker</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #e8f4f8 0%, #d4e8f0 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; color: #333; }
+    .container { background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); padding: 35px; max-width: 550px; width: 100%; position: relative; }
+    .header { text-align: center; margin-bottom: 25px; }
+    .header .logo { font-size: 45px; }
+    .header h1 { color: #1a73e8; font-size: 22px; font-weight: 700; }
+    .header .subtitle { color: #1a73e8; font-size: 14px; font-weight: 600; }
+    .header .wh-badge { background: #1a73e8; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-block; margin-top: 4px; }
+    .time-display { text-align: center; font-size: 13px; color: #666; margin-bottom: 15px; }
+    .tabs { display: flex; margin-bottom: 25px; border-bottom: 2px solid #e8e8e8; }
+    .tab { flex: 1; padding: 12px 5px; text-align: center; cursor: pointer; font-weight: 600; color: #999; border-bottom: 3px solid transparent; font-size: 13px; }
+    .tab.active { color: #1a73e8; border-bottom-color: #1a73e8; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 6px; color: #555; font-weight: 600; font-size: 13px; }
+    input, select { width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 15px; background: #fafafa; color: #333; }
+    input:focus, select:focus { border-color: #1a73e8; outline: none; }
+    button { width: 100%; padding: 14px; background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.2s; }
+    button:hover { opacity: 0.9; }
+    .btn-danger { background: linear-gradient(135deg, #e53935 0%, #c62828 100%); }
+    .btn-request { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); font-size: 12px; width: auto; padding: 8px 15px; margin-top: 5px; }
+    .message { margin-top: 12px; padding: 12px; border-radius: 10px; display: none; font-size: 13px; font-weight: 600; text-align: center; }
+    .message.success { background: #e8f5e9; color: #2e7d32; display: block; }
+    .message.error { background: #ffebee; color: #c62828; display: block; }
+    .message.info { background: #e3f2fd; color: #1565c0; display: block; }
+    .message.warning { background: #fff3e0; color: #e65100; display: block; }
+    .dashboard-btn { position: fixed; top: 15px; right: 15px; padding: 8px 18px; background: #1a73e8; color: white; border: none; border-radius: 16px; font-weight: 700; cursor: pointer; z-index: 1000; font-size: 13px; box-shadow: 0 2px 10px rgba(26,115,232,0.3); width: auto; margin: 0; letter-spacing: 0.5px; transition: all 0.2s; }
+    .dashboard-btn:hover { transform: scale(1.05); box-shadow: 0 4px 16px rgba(26,115,232,0.4); }
+    .session-card { background: #f8fafc; padding: 20px; border-radius: 12px; margin: 12px 0; border-left: 4px solid #1a73e8; }
+    .session-id-display { background: #f0f0f0; padding: 5px 10px; border-radius: 4px; font-size: 11px; color: #666; text-align: center; margin-top: 5px; }
+    .btn-check-session { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: 700; }
+    .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #e53935; color: white; padding: 15px 30px; border-radius: 10px; font-weight: 700; font-size: 16px; z-index: 10000; box-shadow: 0 4px 20px rgba(229,57,53,0.4); display: none; animation: slideDown 0.5s ease; }
+    .toast.show { display: block; }
+    @keyframes slideDown { from { top: -100px; opacity: 0; } to { top: 20px; opacity: 1; } }
+    .trial-btn-container { text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+    .btn-trial { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; width: auto; margin: 0; transition: all 0.3s; }
+    .btn-trial:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(255,152,0,0.4); }
+    .login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 99999; display: none; justify-content: center; align-items: center; }
+    .login-box { background: white; padding: 40px; border-radius: 20px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .login-box h2 { color: #1a73e8; margin-bottom: 10px; }
+    .login-box .lock-icon { font-size: 50px; margin-bottom: 15px; }
+    .login-box input { margin: 10px 0; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; width: 100%; }
+    .login-box input:focus { border-color: #1a73e8; outline: none; }
+    .login-box .error-msg { color: #e53935; font-size: 13px; margin-top: 5px; display: none; }
+    .login-box .hint { color: #999; font-size: 12px; margin-top: 15px; }
+    .login-box .btn-close-modal { background: #e53935; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; margin-top: 10px; }
+    .trial-banner { background: #fff3e0; padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: center; border: 2px solid #ff9800; display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; }
+    .trial-banner .label { font-weight: 700; color: #ff9800; font-size: 14px; }
+    .btn-toggle { background: #1a73e8; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; width: auto; margin: 0; }
+    .btn-toggle.on { background: #e53935; }
+    .mode-status { font-weight: 700; font-size: 14px; }
+    .mode-status.old { color: #e53935; }
+    .mode-status.new { color: #43a047; }
+    .trial-watermark { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ff9800; color: white; padding: 5px 20px; border-radius: 20px; font-size: 12px; font-weight: 700; z-index: 999; opacity: 0.7; display: none; }
+    .trial-watermark.show { display: block; }
+
+    /* ===== FLOATING TIMESTAMP ===== */
+    #floatTimer {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1a73e8;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      z-index: 9997;
+      box-shadow: 0 4px 20px rgba(26,115,232,0.4);
+      display: none;
+      cursor: move;
+      user-select: none;
+      min-width: 200px;
+      text-align: center;
+      border: 2px solid rgba(255,255,255,0.2);
+      transition: all 0.3s;
+    }
+    #floatTimer:hover { transform: scale(1.02); }
+    #floatTimer .timer { font-size: 22px; }
+    #floatTimer .info { font-size: 11px; opacity: 0.8; margin-top: 4px; }
+    #floatTimer .close-float {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #e53935;
+      border: none;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: 0.3s;
+    }
+    #floatTimer:hover .close-float { opacity: 1; }
+    #floatTimer .minimize-float {
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      background: rgba(255,255,255,0.3);
+      border: none;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: 0.3s;
+    }
+    #floatTimer:hover .minimize-float { opacity: 1; }
+    #floatTimer.minimized { padding: 8px 18px; min-width: 120px; }
+    #floatTimer.minimized .timer { font-size: 16px; }
+    #floatTimer.minimized .info { display: none; }
+
+    /* ===== MINI BROWSER ===== */
+    #miniBrowser {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 85%;
+      max-width: 900px;
+      height: 80%;
+      max-height: 600px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      z-index: 9998;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #ddd;
+    }
+    #miniBrowser.active { display: flex; }
+    .mini-browser-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: #f1f3f4;
+      border-bottom: 1px solid #dadce0;
+      flex-shrink: 0;
+    }
+    .mini-browser-toolbar .nav-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #555;
+      width: auto;
+      margin: 0;
+    }
+    .mini-browser-toolbar .nav-btn:hover { background: #e0e0e0; }
+    .mini-browser-toolbar .address-bar {
+      flex: 1;
+      padding: 5px 12px;
+      border: 1px solid #dadce0;
+      border-radius: 20px;
+      font-size: 13px;
+      background: white;
+      outline: none;
+    }
+    .mini-browser-toolbar .address-bar:focus { border-color: #1a73e8; }
+    .mini-browser-toolbar .close-browser {
+      background: #e53935;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mini-browser-content {
+      flex: 1;
+      overflow: hidden;
+      background: white;
+      position: relative;
+    }
+    .mini-browser-content iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .mini-browser-content .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20px;
+      color: #999;
+    }
+    .mini-browser-content .error-msg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #666;
+      padding: 20px;
+    }
+    .mini-browser-content .error-msg .open-link {
+      color: #1a73e8;
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      #miniBrowser { width: 95%; height: 90%; max-height: none; }
+      .mini-browser-toolbar .address-bar { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="trial-watermark" id="trialWatermark">🔬 TRIAL MODE - AKSES TERBATAS</div>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="lock-icon">🔐</div>
+    <h2>Akses Trial Terbatas</h2>
+    <p style="color:#666;font-size:14px;margin-bottom:15px;">Masukkan password untuk mengakses mode trial</p>
+    <input type="password" id="trialPassword" placeholder="Masukkan password trial..." onkeydown="if(event.key==='Enter'){checkTrialPassword();}">
+    <button onclick="checkTrialPassword()" style="margin-top:5px;">🔓 Buka Akses Trial</button>
+    <div class="error-msg" id="loginError">❌ Password salah! Coba lagi.</div>
+    <button class="btn-close-modal" onclick="closeTrialModal()">✕ Tutup</button>
+    <div class="hint">💡 Hubungi administrator untuk mendapatkan akses</div>
+  </div>
+</div>
+
+<div id="toast" class="toast">⚠️ Notifikasi</div>
+
+<button class="dashboard-btn" onclick="showDashboard()">📊 Dashboard TL</button>
+
+<!-- ===== MINI BROWSER ===== -->
+<div id="miniBrowser">
+  <div class="mini-browser-toolbar">
+    <button class="nav-btn" onclick="miniGoBack()" title="Kembali">◀</button>
+    <button class="nav-btn" onclick="miniGoForward()" title="Maju">▶</button>
+    <button class="nav-btn" onclick="miniRefresh()" title="Refresh">⟳</button>
+    <button class="nav-btn" onclick="miniHome()" title="Home">🏠</button>
+    <input class="address-bar" id="miniAddress" placeholder="Ketik URL..." onkeydown="if(event.key==='Enter'){miniNavigate(this.value);}">
+    <button class="close-browser" onclick="closeMiniBrowser()" title="Tutup">✕</button>
+  </div>
+  <div class="mini-browser-content">
+    <iframe id="miniIframe" src="about:blank"></iframe>
+    <div class="loading" id="miniLoading">🌐 Loading...</div>
+    <div class="error-msg" id="miniError" style="display:none;">
+      <p style="font-size:24px;margin-bottom:10px;">🔒</p>
+      <p>Situs ini tidak bisa ditampilkan di sini.</p>
+      <p><span class="open-link" onclick="openInNewTab()">Klik di sini untuk buka di tab baru</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FLOATING TIMESTAMP ===== -->
+<div id="floatTimer">
+  <button class="close-float" onclick="closeFloatingTimer()" title="Tutup">✕</button>
+  <button class="minimize-float" onclick="minimizeFloatingTimer()" title="Minimize">─</button>
+  <div class="timer" id="floatTime">00:00:00</div>
+  <div class="info" id="floatInfo">👤 - | 📍 Line -</div>
+</div>
+
+<!-- ===== MAIN CONTAINER ===== -->
+<div class="container" id="mainContainer">
+  <div class="header">
+    <div class="logo">🏭</div>
+    <h1>PACKING LINE</h1>
+    <p class="subtitle">MANPOWER TRACKER</p>
+    <span class="wh-badge" id="wh-display">Pilih WH</span>
+    <div class="time-display" id="time-display"></div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('staff')">👤 STAFF</div>
+    <div class="tab" onclick="switchTab('ojt')">🎓 OJT/DW</div>
+    <div class="tab" onclick="switchTab('active-session')">📋 SESI AKTIF</div>
+  </div>
+
+  <div id="staff-tab" class="tab-content active">
+    <form onsubmit="loginStaff(event)" autocomplete="off">
+      <div class="form-group"><label>🏭 Warehouse</label><select id="staff-wh" required onchange="document.getElementById('wh-display').textContent=this.value||'Pilih WH'"><option value="">Pilih Warehouse...</option><option value="WH BGO">WH BGO</option><option value="WH CBN">WH CBN</option><option value="WH SRG">WH SRG</option><option value="WH PGS">WH PGS</option><option value="WH BIT">WH BIT</option></select></div>
+      <div class="form-group"><label>👤 Nama Lengkap</label><input type="text" id="staff-nama" required placeholder="Masukkan nama lengkap" autocomplete="off"></div>
+      <div class="form-group"><label>💼 Role / Posisi</label><select id="staff-role" required><option value="">Pilih Role...</option><option value="Checker Outbound">Checker Outbound</option><option value="Picker/Sorter">Picker/Sorter</option><option value="Loader">Loader</option><option value="Helper">Helper</option></select></div>
+      <div class="form-group"><label>🔑 Staff ID</label><input type="password" id="staff-id" required placeholder="Masukkan Staff ID" minlength="4" autocomplete="new-password"><small>Minimal 4 karakter</small></div>
+      <div class="form-group"><label>📍 Pilih Packing Line</label><select id="staff-line" required><option value="">Pilih Line...</option></select></div>
+      <button type="submit">🔓 MASUK / LOGIN</button>
+    </form>
+    <button type="button" onclick="openMiniBrowser('https://www.google.com')" style="background:linear-gradient(135deg, #43a047 0%, #2e7d32 100%);margin-top:8px;">🌐 Buka Browser</button>
+  </div>
+
+  <div id="ojt-tab" class="tab-content">
+    <form onsubmit="loginOJTDW(event)" autocomplete="off">
+      <div class="form-group"><label>📋 Status</label><select id="ojt-status" required><option value="">Pilih Status...</option><option value="On Job Training">🎓 On Job Training</option><option value="Daily Worker">💼 Daily Worker</option></select></div>
+      <div class="form-group"><label>🏭 Warehouse</label><select id="ojt-wh" required onchange="loadTeamLeaders();document.getElementById('wh-display').textContent=this.value||'Pilih WH'"><option value="">Pilih Warehouse...</option><option value="WH BGO">WH BGO</option><option value="WH CBN">WH CBN</option><option value="WH SRG">WH SRG</option><option value="WH PGS">WH PGS</option><option value="WH BIT">WH BIT</option></select></div>
+      <div class="form-group"><label>👤 Nama Lengkap</label><input type="text" id="ojt-nama" required placeholder="Masukkan nama lengkap" autocomplete="off"></div>
+      <div class="form-group"><label>💼 Role / Posisi</label><input type="text" id="ojt-role" required placeholder="Contoh: OJT Operator / DW Helper" autocomplete="off"></div>
+      <div class="form-group"><label>🎫 Kode (dari Team Leader)</label><input type="text" id="ojt-code" required placeholder="Masukkan kode dari TL" autocomplete="off"><small>⚠️ Wajib!</small><button type="button" class="btn-request" onclick="requestCodeToTL()">📩 Request Kode ke TL</button><div class="code-display" id="code-display" style="background:#e8f5e9;border:2px solid #66bb6a;border-radius:10px;padding:10px;text-align:center;font-size:14px;font-weight:700;color:#2e7d32;margin:8px 0;display:none;"></div></div>
+      <div class="form-group"><label>👨‍💼 Nama Team Leader</label><select id="ojt-tl" required><option value="">Pilih TL...</option></select></div>
+      <div class="form-group"><label>📍 Pilih Packing Line</label><select id="ojt-line" required><option value="">Pilih Line...</option></select></div>
+      <button type="submit">🔓 MASUK / LOGIN</button>
+    </form>
+    <button type="button" onclick="openMiniBrowser('https://www.google.com')" style="background:linear-gradient(135deg, #43a047 0%, #2e7d32 100%);margin-top:8px;">🌐 Buka Browser</button>
+  </div>
+
+  <div id="active-session-tab" class="tab-content">
+    <div id="active-session-info"><p style="text-align:center;color:#999;padding:20px;">Tidak ada sesi aktif</p></div>
+  </div>
+  <div id="message" class="message"></div>
+
+  <div class="trial-btn-container">
+    <button class="btn-trial" onclick="openTrialModal()">🔬 Mode Trial</button>
+  </div>
+</div>
+
+<script>
+  // ============ KONFIGURASI ============
+  var TRIAL_PASSWORD = 'trial123';
+  var ALLOWED_USERS = ['Sugianto', 'Admin', 'Test'];
+  var API_URL = 'https://script.google.com/macros/s/AKfycbwvQNFe9PVrXnh1rP-s41VWKO-KcLO-NfC-bPdabMbr5V1AvgwEnEizfkiQQPOmy0ug/exec';
+  // ============================================
+
+  var currentSession = null;
+  var durationInterval = null;
+  var clockInterval = null;
+  var currentTLName = null;
+  var currentTLWH = '';
+  var codeCheckInterval = null;
+  var isTrialAccess = false;
+  var USE_NEW_MODE = false;
+  var isLoggingOut = false;
+  var miniHistory = [];
+  var miniHistoryIndex = -1;
+  var floatMinimized = false;
+  var isDragging = false;
+  var dragOffX = 0, dragOffY = 0;
+
+  // ============ TOAST ============
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg || '⚠️ Notifikasi';
+    t.className = 'toast show';
+    clearTimeout(t._t);
+    t._t = setTimeout(function(){ t.className = 'toast'; }, 4000);
+  }
+
+  // ============ FLOATING TIMER ============
+  function openFloatingTimer() {
+    var ft = document.getElementById('floatTimer');
+    ft.style.display = 'block';
+    ft.classList.remove('minimized');
+    floatMinimized = false;
+    updateFloatingTimer();
+    if (durationInterval) clearInterval(durationInterval);
+    durationInterval = setInterval(updateFloatingTimer, 1000);
+  }
+
+  function updateFloatingTimer() {
+    if (!currentSession) return;
+    var d = Math.floor((new Date() - currentSession.loginTime) / 1000);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor((d % 3600) / 60);
+    var s = d % 60;
+    var timer = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+    document.getElementById('floatTime').textContent = timer;
+    document.getElementById('floatInfo').textContent = '👤 ' + currentSession.nama + ' | 📍 Line ' + currentSession.line;
+  }
+
+  function closeFloatingTimer() {
+    document.getElementById('floatTimer').style.display = 'none';
+    if (durationInterval) clearInterval(durationInterval);
+    durationInterval = null;
+  }
+
+  function minimizeFloatingTimer() {
+    var ft = document.getElementById('floatTimer');
+    floatMinimized = !floatMinimized;
+    if (floatMinimized) {
+      ft.classList.add('minimized');
+      document.querySelector('.minimize-float').textContent = '□';
+    } else {
+      ft.classList.remove('minimized');
+      document.querySelector('.minimize-float').textContent = '─';
+    }
+  }
+
+  // ============ DRAG FLOATING TIMER ============
+  var floatDragData = { isDragging: false, offsetX: 0, offsetY: 0 };
+
+  document.getElementById('floatTimer').addEventListener('mousedown', function(e) {
+    if (e.target.classList.contains('close-float') || e.target.classList.contains('minimize-float')) return;
+    var rect = this.getBoundingClientRect();
+    floatDragData.isDragging = true;
+    floatDragData.offsetX = e.clientX - rect.left;
+    floatDragData.offsetY = e.clientY - rect.top;
+    this.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    if (!floatDragData.isDragging) return;
+    var ft = document.getElementById('floatTimer');
+    var newX = e.clientX - floatDragData.offsetX;
+    var newY = e.clientY - floatDragData.offsetY;
+    newX = Math.max(0, Math.min(newX, window.innerWidth - ft.offsetWidth));
+    newY = Math.max(0, Math.min(newY, window.innerHeight - ft.offsetHeight));
+    ft.style.left = newX + 'px';
+    ft.style.top = newY + 'px';
+    ft.style.right = 'auto';
+    ft.style.bottom = 'auto';
+  });
+
+  document.addEventListener('mouseup', function() {
+    if (floatDragData.isDragging) {
+      floatDragData.isDragging = false;
+      document.getElementById('floatTimer').style.cursor = 'default';
+    }
+  });
+
+  // ============ MINI BROWSER ============
+  function openMiniBrowser(url) {
+    var mb = document.getElementById('miniBrowser');
+    mb.classList.add('active');
+    miniNavigate(url || 'https://www.google.com');
+  }
+
+  function closeMiniBrowser() {
+    document.getElementById('miniBrowser').classList.remove('active');
+    document.getElementById('miniError').style.display = 'none';
+  }
+
+  function miniNavigate(url) {
+    if (!url) return;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+    var address = document.getElementById('miniAddress');
+    var iframe = document.getElementById('miniIframe');
+    var loading = document.getElementById('miniLoading');
+    var error = document.getElementById('miniError');
+    
+    address.value = url;
+    loading.style.display = 'block';
+    error.style.display = 'none';
+    iframe.style.display = 'block';
+    
+    // Coba load di iframe
+    iframe.onload = function() {
+      loading.style.display = 'none';
+      // Cek apakah error karena X-Frame-Options
+      try {
+        var doc = iframe.contentDocument || iframe.contentWindow.document;
+        if (doc && doc.body && doc.body.innerHTML.indexOf('ERR_BLOCKED_BY_X_FRAME_OPTIONS') > -1) {
+          error.style.display = 'block';
+          iframe.style.display = 'none';
+        }
+      } catch(e) {
+        // Cross-origin error berarti jikarame berhasil tapi tidak bisa diakses (normal)
+        loading.style.display = 'none';
+      }
+    };
+    
+    iframe.onerror = function() {
+      loading.style.display = 'none';
+      error.style.display = 'block';
+      iframe.style.display = 'none';
+    };
+    
+    iframe.src = url;
+    
+    // Simpan history
+    if (miniHistoryIndex < miniHistory.length - 1) {
+      miniHistory = miniHistory.slice(0, miniHistoryIndex + 1);
+    }
+    miniHistory.push(url);
+    miniHistoryIndex = miniHistory.length - 1;
+    showToast('🌐 Membuka: ' + url);
+    
+    // Timeout loading
+    setTimeout(function() {
+      loading.style.display = 'none';
+    }, 5000);
+  }
+
+  function openInNewTab() {
+    var url = document.getElementById('miniAddress').value;
+    if (url) {
+      window.open(url, '_blank');
+      showToast('📂 Dibuka di tab baru');
+    }
+  }
+
+  function miniGoBack() {
+    if (miniHistoryIndex > 0) {
+      miniHistoryIndex--;
+      var url = miniHistory[miniHistoryIndex];
+      document.getElementById('miniAddress').value = url;
+      document.getElementById('miniIframe').src = url;
+    }
+  }
+
+  function miniGoForward() {
+    if (miniHistoryIndex < miniHistory.length - 1) {
+      miniHistoryIndex++;
+      var url = miniHistory[miniHistoryIndex];
+      document.getElementById('miniAddress').value = url;
+      document.getElementById('miniIframe').src = url;
+    }
+  }
+
+  function miniRefresh() {
+    var iframe = document.getElementById('miniIframe');
+    if (iframe.src && iframe.src !== 'about:blank') {
+      iframe.src = iframe.src;
+      showToast('⟳ Refresh');
+    }
+  }
+
+  function miniHome() {
+    miniNavigate('https://www.google.com');
+  }
+
+  // ============ MODAL TRIAL ============
+  function openTrialModal() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('trialPassword').value = '';
+    document.getElementById('trialPassword').focus();
+    document.getElementById('loginError').style.display = 'none';
+  }
+
+  function closeTrialModal() {
+    document.getElementById('loginScreen').style.display = 'none';
+  }
+
+  function checkTrialPassword() {
+    var input = document.getElementById('trialPassword');
+    var error = document.getElementById('loginError');
+    if (input.value === TRIAL_PASSWORD) {
+      isTrialAccess = true;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('trialWatermark').className = 'trial-watermark show';
+      showMessage('✅ Mode Trial diaktifkan!', 'success');
+      showTrialBanner();
+    } else {
+      error.style.display = 'block';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  function showTrialBanner() {
+    var container = document.getElementById('mainContainer');
+    var existing = document.querySelector('.trial-banner');
+    if (existing) return;
+    var banner = document.createElement('div');
+    banner.className = 'trial-banner';
+    banner.id = 'trialBanner';
+    banner.innerHTML = `
+      <span class="label">🔬 TRIAL MODE</span>
+      <button class="btn-toggle" id="modeToggle" onclick="toggleMode()">🔄 Switch ke Mode Baru</button>
+      <span class="mode-status old" id="modeStatus">(Lama)</span>
+      <span style="font-size:11px;color:#999;margin-left:5px;">| 👤 Akses: Terbatas</span>
+      <button onclick="disableTrialMode()" style="background:#e53935;color:white;border:none;padding:5px 15px;border-radius:5px;cursor:pointer;font-weight:700;font-size:11px;width:auto;">✕ Tutup Trial</button>
+    `;
+    container.insertBefore(banner, container.firstChild);
+  }
+
+  function disableTrialMode() {
+    if (!confirm('Tutup mode trial?')) return;
+    isTrialAccess = false;
+    document.getElementById('trialWatermark').className = 'trial-watermark';
+    var banner = document.querySelector('.trial-banner');
+    if (banner) banner.remove();
+    showMessage('❌ Mode Trial ditutup.', 'info');
+    USE_NEW_MODE = false;
+  }
+
+  function toggleMode() {
+    if (!isTrialAccess) {
+      alert('⚠️ Silakan aktifkan mode trial terlebih dahulu!');
+      return;
+    }
+    USE_NEW_MODE = !USE_NEW_MODE;
+    var btn = document.getElementById('modeToggle');
+    var status = document.getElementById('modeStatus');
+    if (USE_NEW_MODE) {
+      btn.textContent = '🔄 Switch ke Mode Lama';
+      btn.className = 'btn-toggle on';
+      status.textContent = '(Baru - Trial)';
+      status.className = 'mode-status new';
+      showMessage('✅ Mode BARU diaktifkan! Login akan buka floating timer.', 'success');
+    } else {
+      btn.textContent = '🔄 Switch ke Mode Baru';
+      btn.className = 'btn-toggle';
+      status.textContent = '(Lama)';
+      status.className = 'mode-status old';
+      showMessage('↩️ Kembali ke mode LAMA.', 'info');
+    }
+  }
+
+  // ============ CEK USER ALLOWED ============
+  function isUserAllowed(nama) {
+    if (!isTrialAccess) return true;
+    if (!nama) return false;
+    var namaLower = nama.toLowerCase().trim();
+    for (var i = 0; i < ALLOWED_USERS.length; i++) {
+      if (ALLOWED_USERS[i].toLowerCase().trim() === namaLower) return true;
+    }
+    return false;
+  }
+
+  // ============ FUNGSI UTAMA ============
+  function updateClock() {
+    document.getElementById('time-display').textContent = new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) + ' | ' + new Date().toLocaleTimeString('id-ID');
+  }
+
+  function initPackingLines() {
+    var o='';
+    for(var i=1;i<=22;i++) o+='<option value="'+i+'">Packing Line '+i+'</option>';
+    document.getElementById('staff-line').innerHTML='<option value="">Pilih Line...</option>'+o;
+    document.getElementById('ojt-line').innerHTML='<option value="">Pilih Line...</option>'+o;
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+    document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active')});
+    if(tab==='staff'){
+      document.querySelectorAll('.tab')[0].classList.add('active');
+      document.getElementById('staff-tab').classList.add('active');
+      document.getElementById('wh-display').textContent = document.getElementById('staff-wh').value || 'Pilih WH';
+    } else if(tab==='ojt'){
+      document.querySelectorAll('.tab')[1].classList.add('active');
+      document.getElementById('ojt-tab').classList.add('active');
+      loadTeamLeaders();
+      document.getElementById('wh-display').textContent = document.getElementById('ojt-wh').value || 'Pilih WH';
+    } else if(tab==='active-session'){
+      document.querySelectorAll('.tab')[2].classList.add('active');
+      document.getElementById('active-session-tab').classList.add('active');
+      updateActiveSessionDisplay();
+    }
+  }
+
+  function loadTeamLeaders() {
+    var selWH = document.getElementById('ojt-wh').value;
+    var s=document.getElementById('ojt-tl');
+    if(!selWH){ s.innerHTML='<option value="">Pilih Warehouse dulu...</option>'; return; }
+    fetch(API_URL+'?action=getTeamLeaders&wh='+encodeURIComponent(selWH))
+      .then(function(r){return r.json()})
+      .then(function(data){
+        s.innerHTML='<option value="">Pilih Team Leader...</option>';
+        if(Array.isArray(data)&&data.length>0){
+          data.forEach(function(t){s.innerHTML+='<option value="'+t.name+'">'+t.name+' (Shift: '+t.shift+')</option>'});
+        } else {
+          s.innerHTML='<option value="">Tidak ada TL di WH ini</option>';
+        }
+      }).catch(function(){ s.innerHTML='<option value="">Error load TL</option>'; });
+  }
+
+  function requestCodeToTL() {
+    var n=document.getElementById('ojt-nama').value.trim(),
+        t=document.getElementById('ojt-tl').value,
+        s=document.getElementById('ojt-status').value;
+    if(!n){alert('Isi nama!');return}
+    if(!t){alert('Pilih TL!');return}
+    if(!s){alert('Pilih status!');return}
+    var c=s==='On Job Training'?'OJT':'DW';
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=requestCode&data='+encodeURIComponent(JSON.stringify({nama:n,teamLeader:t,codeType:c}))})
+      .then(function(r){return r.json()})
+      .then(function(r){if(r.success){alert('✅ '+r.message);startCodeCheck(n,t)}else alert('❌ '+r.message)})
+      .catch(function(){alert('Gagal')})
+  }
+
+  function startCodeCheck(n,t) {
+    if(codeCheckInterval)clearInterval(codeCheckInterval);
+    var d=document.getElementById('code-display');
+    d.style.display='block';
+    d.innerHTML='⏳ Menunggu approve dari '+t+'...';
+    codeCheckInterval=setInterval(function(){
+      fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=checkMyCode&data='+encodeURIComponent(JSON.stringify({nama:n,teamLeader:t}))})
+        .then(function(r){return r.json()})
+        .then(function(r){if(r.success){clearInterval(codeCheckInterval);codeCheckInterval=null;d.innerHTML='✅ Kode: <strong>'+r.code+'</strong>';document.getElementById('ojt-code').value=r.code;setTimeout(function(){d.style.display='none'},10000)}})
+        .catch(function(){})
+    },10000)
+  }
+
+  function checkSavedSession() {
+    var s = localStorage.getItem('packingSession');
+    if (s) {
+      try {
+        var p = JSON.parse(s);
+        currentSession = p;
+        currentSession.loginTime = new Date(p.loginTime);
+        return true;
+      } catch(e) {
+        localStorage.removeItem('packingSession');
+      }
+    }
+    return false;
+  }
+
+  function saveSession() {
+    if(currentSession) {
+      localStorage.setItem('packingSession', JSON.stringify({
+        id: currentSession.id,
+        nama: currentSession.nama,
+        line: currentSession.line,
+        type: currentSession.type,
+        teamLeader: currentSession.teamLeader || null,
+        loginTime: currentSession.loginTime.toISOString()
+      }));
+    }
+  }
+
+  function clearSavedSession() {
+    localStorage.removeItem('packingSession');
+  }
+
+  // ============ LOGIN STAFF ============
+  function loginStaff(e) {
+    e.preventDefault();
+    if (isLoggingOut) return;
+
+    var n=document.getElementById('staff-nama').value.trim(),
+        r=document.getElementById('staff-role').value,
+        i=document.getElementById('staff-id').value.trim(),
+        l=document.getElementById('staff-line').value,
+        w=document.getElementById('staff-wh').value;
+
+    if(!n||!r||!i||!l||!w){showMessage('Semua field harus diisi!','error');return}
+    if(i.length<4){showMessage('Staff ID minimal 4 karakter!','error');return}
+    if (isTrialAccess && !isUserAllowed(n)) {
+      showMessage('⛔ Akses ditolak! Nama "' + n + '" tidak terdaftar di trial mode.', 'error');
+      return;
+    }
+
+    showMessage('Memproses...','info');
+
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=loginStaff&data='+encodeURIComponent(JSON.stringify({nama:n,role:r,staffId:i,packingLine:l,wh:w}))
+    })
+    .then(function(r){return r.json()})
+    .then(function(r){
+      if(r.success){
+        currentSession={id:r.sessionId,nama:n,line:l,type:'Staff',loginTime:new Date()};
+        saveSession();
+
+        if (isTrialAccess && USE_NEW_MODE) {
+          showMessage('✅ Login berhasil! Membuka floating timer...', 'success');
+          e.target.reset();
+          document.getElementById('wh-display').textContent = 'Pilih WH';
+          setTimeout(function(){
+            openFloatingTimer();
+            // Buka mini browser default
+            openMiniBrowser('https://www.google.com');
+          }, 500);
+          return;
+        }
+
+        showMessage(r.message,'success');
+        updateActiveSessionDisplay();
+        switchTab('active-session');
+        e.target.reset();
+        saveSession();
+      } else {
+        showMessage(r.message,'error');
+      }
+    }).catch(function(e){showMessage('Gagal: '+e.message,'error')})
+  }
+
+  // ============ LOGIN OJT/DW ============
+  function loginOJTDW(e) {
+    e.preventDefault();
+    if (isLoggingOut) return;
+
+    var s=document.getElementById('ojt-status').value,
+        n=document.getElementById('ojt-nama').value.trim(),
+        r=document.getElementById('ojt-role').value.trim(),
+        c=document.getElementById('ojt-code').value.trim(),
+        t=document.getElementById('ojt-tl').value,
+        l=document.getElementById('ojt-line').value,
+        w=document.getElementById('ojt-wh').value;
+
+    if(!s||!n||!r||!c||!t||!l||!w){showMessage('Semua field harus diisi!','error');return}
+    if (isTrialAccess && !isUserAllowed(n)) {
+      showMessage('⛔ Akses ditolak! Nama "' + n + '" tidak terdaftar di trial mode.', 'error');
+      return;
+    }
+
+    showMessage('Memproses...','info');
+
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=loginOJTDW&data='+encodeURIComponent(JSON.stringify({nama:n,role:r,ojtCode:c,teamLeader:t,statusOJT:s,packingLine:l,wh:w}))
+    })
+    .then(function(r){return r.json()})
+    .then(function(r){
+      if(r.success){
+        currentSession={id:r.sessionId,nama:n,line:l,type:s,teamLeader:t,loginTime:new Date()};
+        saveSession();
+
+        if (isTrialAccess && USE_NEW_MODE) {
+          showMessage('✅ Login berhasil! Membuka floating timer...', 'success');
+          e.target.reset();
+          document.getElementById('wh-display').textContent = 'Pilih WH';
+          if(codeCheckInterval){clearInterval(codeCheckInterval);codeCheckInterval=null}
+          document.getElementById('code-display').style.display='none';
+          setTimeout(function(){
+            openFloatingTimer();
+            openMiniBrowser('https://www.google.com');
+          }, 500);
+          return;
+        }
+
+        showMessage(r.message,'success');
+        updateActiveSessionDisplay();
+        switchTab('active-session');
+        e.target.reset();
+        saveSession();
+        if(codeCheckInterval){clearInterval(codeCheckInterval);codeCheckInterval=null}
+        document.getElementById('code-display').style.display='none';
+      } else {
+        showMessage(r.message,'error');
+      }
+    }).catch(function(e){showMessage('Gagal: '+e.message,'error')})
+  }
+
+  // ============ LOGOUT ============
+  function performLogout() {
+    if (isLoggingOut) return;
+    if (!currentSession || !confirm('Yakin ingin logout?')) return;
+
+    isLoggingOut = true;
+    showMessage('Logout...', 'info');
+
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=logout&data='+encodeURIComponent(JSON.stringify({sessionId:currentSession.id}))
+    })
+    .then(function(r){return r.json()})
+    .then(function(r){
+      isLoggingOut = false;
+      if(r.success){
+        showMessage(r.message,'success');
+        if (durationInterval) clearInterval(durationInterval);
+        durationInterval = null;
+        clearSavedSession();
+        currentSession = null;
+        document.getElementById('floatTimer').style.display = 'none';
+        document.getElementById('miniBrowser').classList.remove('active');
+        switchTab('staff');
+        document.querySelectorAll('form').forEach(function(f){ f.reset(); });
+        document.getElementById('wh-display').textContent = 'Pilih WH';
+        showToast('🔒 Logout berhasil!');
+      } else {
+        showMessage(r.message,'error');
+      }
+    }).catch(function(e){
+      isLoggingOut = false;
+      showMessage('Gagal logout: '+e.message,'error');
+    });
+  }
+
+  // ============ REQUEST TAB BARU KE TL ============
+  function requestNewTabToTL() {
+    if(!currentSession) {
+      alert('⚠️ Silakan login terlebih dahulu.');
+      return;
+    }
+
+    var reason = prompt('📝 Alasan request tab baru:', 'Membutuhkan tab tambahan untuk bekerja');
+    if (!reason) return;
+
+    var tlName = localStorage.getItem('tlName') || currentSession.teamLeader || '';
+
+    showMessage('📩 Mengirim request ke TL...', 'info');
+
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=requestNewTab&data='+encodeURIComponent(JSON.stringify({
+        sessionId: currentSession.id,
+        nama: currentSession.nama,
+        line: currentSession.line,
+        teamLeader: tlName,
+        reason: reason
+      }))
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(r){
+      if(r.success){
+        alert('✅ Request terkirim! Tunggu approve dari Team Leader.');
+        showMessage('📩 Request terkirim. Tunggu approve dari TL.', 'info');
+      } else {
+        alert('❌ Gagal: ' + (r.message || 'Unknown error'));
+      }
+    })
+    .catch(function(e){
+      alert('❌ Gagal mengirim request: ' + e.message);
+    });
+  }
+
+  // ============ CEK SESSION MANUAL ============
+  function checkSessionManually() {
+    if(!currentSession) {
+      alert('Tidak ada session aktif');
+      return;
+    }
+
+    showMessage('🔍 Mengecek session...', 'info');
+
+    var tlName = localStorage.getItem('tlName') || '';
+    var tlWH = localStorage.getItem('tlWH') || '';
+    var params = {};
+    if(tlName && tlWH) { params = { teamLeader: tlName, wh: tlWH }; }
+
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=getDashboard&data='+encodeURIComponent(JSON.stringify(params))
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var all = [];
+      if(d && d.activeStaff) { if(Array.isArray(d.activeStaff)) all = all.concat(d.activeStaff); }
+      if(d && d.activeOJT) { if(Array.isArray(d.activeOJT)) all = all.concat(d.activeOJT); }
+      if(d && d.activeDW) { if(Array.isArray(d.activeDW)) all = all.concat(d.activeDW); }
+
+      var found = false;
+      for(var i=0;i<all.length;i++){
+        var serverId = all[i].row || all[i].sessionId || all[i].id || '';
+        if(String(serverId) === String(currentSession.id)){
+          found = true;
+          break;
+        }
+      }
+
+      if(found) {
+        alert('✅ Session masih aktif di server!\n\nSession ID: ' + currentSession.id);
+      } else if(all.length > 0) {
+        alert('⚠️ Sesi anda TIDAK DITEMUKAN di server!\nAnda mungkin sudah di-force logout oleh Team Leader.');
+        if (durationInterval) clearInterval(durationInterval);
+        durationInterval = null;
+        clearSavedSession();
+        currentSession = null;
+        document.getElementById('floatTimer').style.display = 'none';
+        document.getElementById('miniBrowser').classList.remove('active');
+        switchTab('staff');
+        document.querySelectorAll('form').forEach(function(f){ f.reset(); });
+        document.getElementById('wh-display').textContent = 'Pilih WH';
+        showMessage('⚠️ Sesi telah diakhiri oleh Team Leader.', 'warning');
+      } else {
+        alert('⚠️ Tidak bisa mengecek session (data server kosong)');
+      }
+    })
+    .catch(function(e){
+      alert('❌ Gagal cek session: ' + e.message);
+    });
+  }
+
+  // ============ UPDATE DISPLAY ============
+  function updateActiveSessionDisplay() {
+    var c = document.getElementById('active-session-info');
+    if(!currentSession){
+      c.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">Tidak ada sesi aktif</p>';
+      return;
+    }
+    var d = Math.floor((new Date() - currentSession.loginTime) / 1000);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor((d % 3600) / 60);
+    var s = d % 60;
+    var timer = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+    c.innerHTML = '<div class="session-card">' +
+      '<h3 style="color:#1a73e8;text-align:center;">✅ SESI AKTIF</h3>' +
+      '<div style="text-align:center;font-size:44px;font-weight:700;">' + timer + '</div>' +
+      '<p><strong>👤 Nama:</strong> ' + currentSession.nama + '</p>' +
+      '<p><strong>🏭 Line:</strong> ' + currentSession.line + '</p>' +
+      '<p><strong>📌 Tipe:</strong> ' + currentSession.type + '</p>' +
+      (currentSession.teamLeader ? '<p><strong>👨‍💼 TL:</strong> ' + currentSession.teamLeader + '</p>' : '') +
+      '<p><small>🕐 Login: ' + currentSession.loginTime.toLocaleString('id-ID') + '</small></p>' +
+      '<div class="session-id-display">🆔 Session ID: ' + currentSession.id + '</div>' +
+      '<button onclick="checkSessionManually()" class="btn-check-session">🔍 CEK SESSION MANUAL</button>' +
+      '<button onclick="performLogout()" class="btn-danger" style="margin-top:10px;width:100%;font-size:17px;">🔒 LOGOUT / AKHIRI SESI</button>' +
+      '</div>';
+  }
+
+  function showMessage(tx, tp) {
+    var m = document.getElementById('message');
+    m.textContent = tx;
+    m.className = 'message ' + tp;
+    clearTimeout(m._t);
+    m._t = setTimeout(function(){ m.className = 'message'; }, 5000);
+  }
+
+  // ============ DASHBOARD ============
+  function showDashboard() {
+    var tl = prompt('👨‍💼 Nama Team Leader:');
+    var pw = prompt('🔑 Password:');
+    if(!tl||!pw) return;
+
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=verifyTL&data='+encodeURIComponent(JSON.stringify({tlName:tl.trim(),password:pw.trim()}))
+    })
+    .then(function(r){return r.json()})
+    .then(function(v){
+      if(!v.success){ alert('❌ '+v.message); return; }
+      if(!v.warehouse){ alert('❌ TL tidak memiliki Warehouse!'); return; }
+      localStorage.setItem('tlName', tl.trim());
+      localStorage.setItem('tlPw', pw.trim());
+      localStorage.setItem('tlWH', v.warehouse);
+      localStorage.setItem('openDashboard', 'true');
+      window.open(API_URL, '_blank');
+    })
+  }
+
+  function refreshDashboardFull() {
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=getDashboard&data='+encodeURIComponent(JSON.stringify({teamLeader:currentTLName,wh:currentTLWH}))
+    })
+    .then(function(r){return r.json()})
+    .then(function(data){
+      var html = '<div style="background:#1a73e8;color:white;padding:15px 20px;border-radius:12px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">';
+      html += '<span style="font-size:20px;font-weight:700;">👨‍💼 '+currentTLName+' <span style="font-size:12px;">('+currentTLWH+')</span></span>';
+      html += '<span style="font-size:12px;">Total: '+data.stats.totalActive+' | Staff: '+data.stats.totalStaff+' | OJT: '+data.stats.totalOJT+' | DW: '+data.stats.totalDW+' | Kosong: '+data.stats.availableLines+'</span>';
+      html += '</div>';
+
+      if(data.pendingRequests && data.pendingRequests.length > 0) {
+        html += '<div style="background:#fff3e0;padding:10px 15px;border-radius:8px;margin-bottom:15px;font-weight:700;">🔔 '+data.pendingRequests.length+' Request: ';
+        data.pendingRequests.forEach(function(r){
+          html += '<button onclick="approveRequestFull('+r.row+')" style="background:#43a047;color:white;border:none;padding:5px 12px;border-radius:5px;margin:2px 4px;cursor:pointer;">✅ '+r.nama+' ('+r.codeType+')</button>';
+        });
+        html += '</div>';
+      }
+
+      html += '<div style="display:grid;grid-template-columns:repeat(11,1fr);gap:8px;">';
+      data.allPackingLines.forEach(function(l){
+        var bg = l.status === 'Occupied' ? '#ffebee' : '#e8f5e9';
+        var border = l.status === 'Occupied' ? '#ef5350' : '#66bb6a';
+        var color = l.status === 'Occupied' ? '#c62828' : '#2e7d32';
+        html += '<div style="background:'+bg+';border:2px solid '+border+';padding:10px 5px;text-align:center;border-radius:8px;font-weight:700;color:'+color+';min-height:85px;">';
+        html += '<div style="font-size:16px;">L'+l.line+'</div>';
+        if(l.status === 'Occupied') {
+          html += '<div style="font-size:10px;margin:4px 0;">'+l.user+'</div>';
+          html += '<div style="font-size:10px;background:rgba(0,0,0,0.1);padding:2px 6px;border-radius:4px;display:inline-block;">⏱️ '+l.duration+'</div>';
+          html += '<br><button onclick="forceLogoutDirect('+l.line+')" style="background:#e53935;color:white;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:9px;margin-top:4px;">✕ Force</button>';
+        } else {
+          html += '<div style="font-size:10px;margin-top:10px;">Kosong</div>';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+
+      html += '<div style="margin-top:15px;text-align:center;"><button onclick="generateCodeFull()" style="background:#43a047;color:white;border:none;padding:10px 25px;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px;">🎫 Generate Kode</button></div>';
+
+      document.getElementById('dash-full').innerHTML = html;
+    });
+  }
+
+  function approveRequestFull(rowId) {
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=approveRequest&data='+encodeURIComponent(JSON.stringify({rowId:rowId,teamLeader:currentTLName}))
+    }).then(function(){ refreshDashboardFull(); });
+  }
+
+  function generateCodeFull() {
+    var t = prompt('Ketik: OJT atau DW');
+    if(!t || (t !== 'OJT' && t !== 'DW')) return;
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=generateCode&data='+encodeURIComponent(JSON.stringify({teamLeader:currentTLName,codeType:t}))
+    })
+    .then(function(r){return r.json()})
+    .then(function(r){
+      if(r.success) {
+        navigator.clipboard.writeText(r.code);
+        alert('✅ Kode: '+r.code+'\n\n📋 Sudah di-copy!');
+      } else {
+        alert('❌ '+r.message);
+      }
+    });
+  }
+
+  function forceLogoutDirect(lineNum) {
+    if(!confirm('⚠️ Force logout Line '+lineNum+'?')) return;
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=getDashboard&data='+encodeURIComponent(JSON.stringify({teamLeader:currentTLName,wh:currentTLWH}))
+    })
+    .then(function(r){return r.json()})
+    .then(function(data){
+      var all = [].concat(data.activeStaff||[], data.activeOJT||[], data.activeDW||[]);
+      var found = null;
+      for(var i=0;i<all.length;i++){
+        if(all[i].line == lineNum){ found = all[i]; break; }
+      }
+      if(!found){ alert('Line '+lineNum+' tidak ditemukan!'); refreshDashboardFull(); return; }
+
+      fetch(API_URL,{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:'action=logout&data='+encodeURIComponent(JSON.stringify({sessionId:found.row}))
+      })
+      .then(function(r){return r.json()})
+      .then(function(res){
+        if(res.success){ alert('✅ Force logout berhasil! '+res.message); refreshDashboardFull(); }
+        else { alert('❌ Gagal: '+res.message); }
+      });
+    });
+  }
+
+  // ============ INIT ============
+  function initApp() {
+    initPackingLines();
+    updateClock();
+    if (clockInterval) clearInterval(clockInterval);
+    clockInterval = setInterval(updateClock, 1000);
+    if (!checkSavedSession()) {
+      switchTab('staff');
+    }
+  }
+
+  window.onload = function() {
+    if (localStorage.getItem('openDashboard') === 'true') {
+      localStorage.removeItem('openDashboard');
+      document.querySelector('.container').style.display = 'none';
+      document.querySelector('.dashboard-btn').style.display = 'none';
+      document.querySelector('.trial-btn-container').style.display = 'none';
+
+      var tlName = localStorage.getItem('tlName');
+      var pw = localStorage.getItem('tlPw');
+      var tlWH = localStorage.getItem('tlWH') || '';
+
+      if (!tlName || !pw || !tlWH) {
+        alert('Session expired!');
+        window.close();
+        return;
+      }
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'action=verifyTL&data=' + encodeURIComponent(JSON.stringify({ tlName: tlName, password: pw }))
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(v) {
+        if (!v.success) {
+          alert('❌ ' + v.message);
+          window.close();
+          return;
+        }
+        currentTLName = tlName;
+        currentTLWH = tlWH;
+        document.body.innerHTML = '<div id="dash-full" style="padding:20px;max-width:100%;background:#f5f7fa;min-height:100vh;"></div>';
+        refreshDashboardFull();
+        setInterval(function() { refreshDashboardFull(); }, 15000);
+      });
+      return;
+    }
+
+    document.getElementById('mainContainer').style.display = 'block';
+    initApp();
+  };
+
+  window.addEventListener('beforeunload', function(e) {
+    if (currentSession && !isLoggingOut) {
+      e.preventDefault();
+      e.returnValue = '⚠️ LOGOUT DULU!';
+      return e.returnValue;
+    }
+  });
+</script>
+</body>
+</html>
