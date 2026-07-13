@@ -62,183 +62,220 @@
     .trial-watermark { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ff9800; color: white; padding: 5px 20px; border-radius: 20px; font-size: 12px; font-weight: 700; z-index: 999; opacity: 0.7; display: none; }
     .trial-watermark.show { display: block; }
 
-    /* ===== FLOATING TIMESTAMP ===== */
+    /* ===== FLOATING TIMESTAMP (LENGKAP) ===== */
     #floatTimer {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: #1a73e8;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 700;
-      z-index: 9997;
-      box-shadow: 0 4px 20px rgba(26,115,232,0.4);
-      display: none;
-      cursor: move;
-      user-select: none;
-      min-width: 200px;
-      text-align: center;
-      border: 2px solid rgba(255,255,255,0.2);
-      transition: all 0.3s;
-    }
-    #floatTimer:hover { transform: scale(1.02); }
-    #floatTimer .timer { font-size: 22px; }
-    #floatTimer .info { font-size: 11px; opacity: 0.8; margin-top: 4px; }
-    #floatTimer .close-float {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: #e53935;
-      border: none;
-      color: white;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: 0.3s;
-    }
-    #floatTimer:hover .close-float { opacity: 1; }
-    #floatTimer .minimize-float {
-      position: absolute;
-      top: -8px;
-      left: -8px;
-      background: rgba(255,255,255,0.3);
-      border: none;
-      color: white;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: 0.3s;
-    }
-    #floatTimer:hover .minimize-float { opacity: 1; }
-    #floatTimer.minimized { padding: 8px 18px; min-width: 120px; }
-    #floatTimer.minimized .timer { font-size: 16px; }
-    #floatTimer.minimized .info { display: none; }
-
-    /* ===== MINI BROWSER ===== */
-    #miniBrowser {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 85%;
-      max-width: 900px;
-      height: 80%;
-      max-height: 600px;
       background: white;
       border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-      z-index: 9998;
-      flex-direction: column;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      z-index: 9997;
+      border: 1px solid #e0e0e0;
+      min-width: 280px;
+      max-width: 340px;
+      display: none;
       overflow: hidden;
-      border: 1px solid #ddd;
+      transition: all 0.3s;
+      animation: slideUp 0.3s ease;
     }
-    #miniBrowser.active { display: flex; }
-    .mini-browser-toolbar {
+    #floatTimer.active { display: block; }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    
+    .float-header {
+      background: #1a73e8;
+      color: white;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: move;
+      user-select: none;
+    }
+    .float-header .title { font-weight: 700; font-size: 13px; }
+    .float-header .timer-badge { font-size: 14px; font-weight: 700; background: rgba(255,255,255,0.2); padding: 2px 12px; border-radius: 12px; }
+    .float-header .float-actions { display: flex; gap: 4px; }
+    .float-header .float-actions button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      transition: 0.2s;
+    }
+    .float-header .float-actions button:hover { background: rgba(255,255,255,0.4); }
+    .float-header .float-actions .close-float:hover { background: #e53935; }
+    
+    .float-body {
+      padding: 14px 16px;
+      font-size: 13px;
+    }
+    .float-body .session-info { margin-bottom: 10px; }
+    .float-body .session-info .row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px solid #f0f0f0; }
+    .float-body .session-info .row .label { font-weight: 600; color: #555; }
+    .float-body .session-info .row .value { color: #333; }
+    .float-body .session-id { background: #f0f0f0; padding: 4px 10px; border-radius: 4px; font-size: 11px; color: #666; text-align: center; margin-bottom: 10px; }
+    .float-body .btn-group { display: flex; flex-direction: column; gap: 6px; }
+    .float-body .btn-group button {
+      padding: 8px 12px;
+      font-size: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      width: 100%;
+      margin: 0;
+      transition: 0.2s;
+    }
+    .float-body .btn-group button:hover { opacity: 0.9; transform: scale(1.01); }
+    .float-body .btn-group .btn-request-tab { background: #ff9800; color: white; }
+    .float-body .btn-group .btn-back-main { background: #795548; color: white; }
+    .float-body .btn-group .btn-check { background: #1a73e8; color: white; }
+    .float-body .btn-group .btn-logout { background: #e53935; color: white; }
+    
+    #floatTimer.minimized { min-width: 160px; max-width: 200px; }
+    #floatTimer.minimized .float-body { display: none; }
+    #floatTimer.minimized .float-header .timer-badge { display: none; }
+    #floatTimer.minimized .float-header .title { font-size: 12px; }
+    
+    /* ===== BROWSER TAB (FULL SIZE) ===== */
+    #browserTab {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9996;
+      background: white;
+      flex-direction: column;
+    }
+    #browserTab.active { display: flex; }
+    
+    .browser-toolbar {
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 12px;
+      padding: 8px 14px;
       background: #f1f3f4;
       border-bottom: 1px solid #dadce0;
       flex-shrink: 0;
+      flex-wrap: wrap;
     }
-    .mini-browser-toolbar .nav-btn {
+    .browser-toolbar .nav-btn {
       background: transparent;
       border: none;
       cursor: pointer;
-      font-size: 16px;
-      padding: 4px 8px;
+      font-size: 18px;
+      padding: 4px 10px;
       border-radius: 4px;
       color: #555;
       width: auto;
       margin: 0;
+      transition: 0.2s;
     }
-    .mini-browser-toolbar .nav-btn:hover { background: #e0e0e0; }
-    .mini-browser-toolbar .address-bar {
+    .browser-toolbar .nav-btn:hover { background: #e0e0e0; }
+    .browser-toolbar .address-bar {
       flex: 1;
-      padding: 5px 12px;
+      padding: 6px 16px;
       border: 1px solid #dadce0;
-      border-radius: 20px;
-      font-size: 13px;
+      border-radius: 24px;
+      font-size: 14px;
       background: white;
       outline: none;
+      min-width: 120px;
     }
-    .mini-browser-toolbar .address-bar:focus { border-color: #1a73e8; }
-    .mini-browser-toolbar .close-browser {
+    .browser-toolbar .address-bar:focus { border-color: #1a73e8; }
+    .browser-toolbar .close-browser {
       background: #e53935;
       color: white;
       border: none;
       border-radius: 50%;
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: 0.2s;
     }
-    .mini-browser-content {
+    .browser-toolbar .close-browser:hover { opacity: 0.8; transform: scale(1.05); }
+    
+    .browser-content {
       flex: 1;
       overflow: hidden;
       background: white;
       position: relative;
     }
-    .mini-browser-content iframe {
+    .browser-content iframe {
       width: 100%;
       height: 100%;
       border: none;
     }
-    .mini-browser-content .loading {
+    .browser-content .loading {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 20px;
       color: #999;
+      text-align: center;
     }
-    .mini-browser-content .error-msg {
+    .browser-content .loading .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #1a73e8;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 10px;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    .browser-content .error-msg {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
       color: #666;
-      padding: 20px;
+      padding: 30px;
+      max-width: 400px;
     }
-    .mini-browser-content .error-msg .open-link {
+    .browser-content .error-msg .icon { font-size: 48px; margin-bottom: 10px; }
+    .browser-content .error-msg .open-link {
       color: #1a73e8;
       text-decoration: underline;
       cursor: pointer;
       font-weight: 600;
     }
+    .browser-content .error-msg .open-link:hover { color: #1557b0; }
 
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 600px) {
-      #miniBrowser { width: 95%; height: 90%; max-height: none; }
-      .mini-browser-toolbar .address-bar { font-size: 11px; }
+      #floatTimer { min-width: 240px; right: 10px; bottom: 10px; }
+      #floatTimer .float-body { padding: 10px 12px; font-size: 12px; }
+      .browser-toolbar { padding: 5px 8px; }
+      .browser-toolbar .address-bar { font-size: 12px; padding: 4px 10px; }
     }
   </style>
 </head>
 <body>
 
+<!-- ===== WATERMARK ===== -->
 <div class="trial-watermark" id="trialWatermark">🔬 TRIAL MODE - AKSES TERBATAS</div>
 
+<!-- ===== LOCK SCREEN ===== -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="lock-icon">🔐</div>
@@ -252,40 +289,65 @@
   </div>
 </div>
 
+<!-- ===== TOAST ===== -->
 <div id="toast" class="toast">⚠️ Notifikasi</div>
 
+<!-- ===== DASHBOARD TL ===== -->
 <button class="dashboard-btn" onclick="showDashboard()">📊 Dashboard TL</button>
 
-<!-- ===== MINI BROWSER ===== -->
-<div id="miniBrowser">
-  <div class="mini-browser-toolbar">
-    <button class="nav-btn" onclick="miniGoBack()" title="Kembali">◀</button>
-    <button class="nav-btn" onclick="miniGoForward()" title="Maju">▶</button>
-    <button class="nav-btn" onclick="miniRefresh()" title="Refresh">⟳</button>
-    <button class="nav-btn" onclick="miniHome()" title="Home">🏠</button>
-    <input class="address-bar" id="miniAddress" placeholder="Ketik URL..." onkeydown="if(event.key==='Enter'){miniNavigate(this.value);}">
-    <button class="close-browser" onclick="closeMiniBrowser()" title="Tutup">✕</button>
+<!-- ===== BROWSER TAB (FULL SIZE) ===== -->
+<div id="browserTab">
+  <div class="browser-toolbar">
+    <button class="nav-btn" onclick="browserGoBack()" title="Kembali">◀</button>
+    <button class="nav-btn" onclick="browserGoForward()" title="Maju">▶</button>
+    <button class="nav-btn" onclick="browserRefresh()" title="Refresh">⟳</button>
+    <button class="nav-btn" onclick="browserHome()" title="Home">🏠</button>
+    <input class="address-bar" id="browserAddress" placeholder="Ketik URL atau search..." onkeydown="if(event.key==='Enter'){browserNavigate(this.value);}">
+    <button class="close-browser" onclick="closeBrowserTab()" title="Tutup Browser">✕</button>
   </div>
-  <div class="mini-browser-content">
-    <iframe id="miniIframe" src="about:blank"></iframe>
-    <div class="loading" id="miniLoading">🌐 Loading...</div>
-    <div class="error-msg" id="miniError" style="display:none;">
-      <p style="font-size:24px;margin-bottom:10px;">🔒</p>
-      <p>Situs ini tidak bisa ditampilkan di sini.</p>
-      <p><span class="open-link" onclick="openInNewTab()">Klik di sini untuk buka di tab baru</span></p>
+  <div class="browser-content">
+    <iframe id="browserIframe" src="about:blank"></iframe>
+    <div class="loading" id="browserLoading">
+      <div class="spinner"></div>
+      <div>🌐 Memuat halaman...</div>
+    </div>
+    <div class="error-msg" id="browserError" style="display:none;">
+      <div class="icon">🔒</div>
+      <h3>Situs tidak bisa ditampilkan di sini</h3>
+      <p style="margin:10px 0;">Beberapa situs (seperti Google) melarang tampil di dalam bingkai.</p>
+      <p><span class="open-link" onclick="openInNewTab()">📂 Klik di sini untuk buka di tab baru</span></p>
     </div>
   </div>
 </div>
 
-<!-- ===== FLOATING TIMESTAMP ===== -->
+<!-- ===== FLOATING TIMESTAMP (LENGKAP) ===== -->
 <div id="floatTimer">
-  <button class="close-float" onclick="closeFloatingTimer()" title="Tutup">✕</button>
-  <button class="minimize-float" onclick="minimizeFloatingTimer()" title="Minimize">─</button>
-  <div class="timer" id="floatTime">00:00:00</div>
-  <div class="info" id="floatInfo">👤 - | 📍 Line -</div>
+  <div class="float-header" id="floatHeader">
+    <span class="title">⏱️ Sesi Aktif</span>
+    <span class="timer-badge" id="floatTime">00:00:00</span>
+    <div class="float-actions">
+      <button onclick="minimizeFloat()" title="Minimize" id="minimizeBtn">─</button>
+      <button class="close-float" onclick="closeFloat()" title="Tutup">✕</button>
+    </div>
+  </div>
+  <div class="float-body">
+    <div class="session-info">
+      <div class="row"><span class="label">👤 Nama</span><span class="value" id="fNama">-</span></div>
+      <div class="row"><span class="label">🏭 Line</span><span class="value" id="fLine">-</span></div>
+      <div class="row"><span class="label">📌 Tipe</span><span class="value" id="fType">-</span></div>
+      <div class="row"><span class="label">🕐 Login</span><span class="value" id="fLogin">-</span></div>
+    </div>
+    <div class="session-id" id="fSessionId">🆔 Session ID: -</div>
+    <div class="btn-group">
+      <button class="btn-request-tab" onclick="requestNewTabToTL()">📩 Request Tab Baru ke TL</button>
+      <button class="btn-back-main" onclick="closeAllTabs()">⬅️ Kembali ke Login</button>
+      <button class="btn-check" onclick="checkSessionManually()">🔍 CEK SESSION MANUAL</button>
+      <button class="btn-logout" onclick="performLogout()">🔒 LOGOUT / AKHIRI SESI</button>
+    </div>
+  </div>
 </div>
 
-<!-- ===== MAIN CONTAINER ===== -->
+<!-- ===== MAIN CONTAINER (LOGIN) ===== -->
 <div class="container" id="mainContainer">
   <div class="header">
     <div class="logo">🏭</div>
@@ -309,7 +371,6 @@
       <div class="form-group"><label>📍 Pilih Packing Line</label><select id="staff-line" required><option value="">Pilih Line...</option></select></div>
       <button type="submit">🔓 MASUK / LOGIN</button>
     </form>
-    <button type="button" onclick="openMiniBrowser('https://www.google.com')" style="background:linear-gradient(135deg, #43a047 0%, #2e7d32 100%);margin-top:8px;">🌐 Buka Browser</button>
   </div>
 
   <div id="ojt-tab" class="tab-content">
@@ -323,7 +384,6 @@
       <div class="form-group"><label>📍 Pilih Packing Line</label><select id="ojt-line" required><option value="">Pilih Line...</option></select></div>
       <button type="submit">🔓 MASUK / LOGIN</button>
     </form>
-    <button type="button" onclick="openMiniBrowser('https://www.google.com')" style="background:linear-gradient(135deg, #43a047 0%, #2e7d32 100%);margin-top:8px;">🌐 Buka Browser</button>
   </div>
 
   <div id="active-session-tab" class="tab-content">
@@ -352,11 +412,10 @@
   var isTrialAccess = false;
   var USE_NEW_MODE = false;
   var isLoggingOut = false;
-  var miniHistory = [];
-  var miniHistoryIndex = -1;
   var floatMinimized = false;
-  var isDragging = false;
-  var dragOffX = 0, dragOffY = 0;
+  var browserHistory = [];
+  var browserHistoryIndex = -1;
+  var floatDragData = { isDragging: false, offsetX: 0, offsetY: 0 };
 
   // ============ TOAST ============
   function showToast(msg) {
@@ -367,18 +426,19 @@
     t._t = setTimeout(function(){ t.className = 'toast'; }, 4000);
   }
 
-  // ============ FLOATING TIMER ============
-  function openFloatingTimer() {
+  // ============ FLOATING TIMESTAMP ============
+  function openFloatTimer() {
     var ft = document.getElementById('floatTimer');
-    ft.style.display = 'block';
+    ft.classList.add('active');
     ft.classList.remove('minimized');
     floatMinimized = false;
-    updateFloatingTimer();
+    document.getElementById('minimizeBtn').textContent = '─';
+    updateFloatTimer();
     if (durationInterval) clearInterval(durationInterval);
-    durationInterval = setInterval(updateFloatingTimer, 1000);
+    durationInterval = setInterval(updateFloatTimer, 1000);
   }
 
-  function updateFloatingTimer() {
+  function updateFloatTimer() {
     if (!currentSession) return;
     var d = Math.floor((new Date() - currentSession.loginTime) / 1000);
     var h = Math.floor(d / 3600);
@@ -386,37 +446,44 @@
     var s = d % 60;
     var timer = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
     document.getElementById('floatTime').textContent = timer;
-    document.getElementById('floatInfo').textContent = '👤 ' + currentSession.nama + ' | 📍 Line ' + currentSession.line;
+    document.getElementById('fNama').textContent = currentSession.nama;
+    document.getElementById('fLine').textContent = currentSession.line;
+    document.getElementById('fType').textContent = currentSession.type;
+    document.getElementById('fLogin').textContent = currentSession.loginTime.toLocaleString('id-ID');
+    document.getElementById('fSessionId').textContent = '🆔 Session ID: ' + currentSession.id;
   }
 
-  function closeFloatingTimer() {
-    document.getElementById('floatTimer').style.display = 'none';
-    if (durationInterval) clearInterval(durationInterval);
-    durationInterval = null;
-  }
-
-  function minimizeFloatingTimer() {
+  function minimizeFloat() {
     var ft = document.getElementById('floatTimer');
     floatMinimized = !floatMinimized;
     if (floatMinimized) {
       ft.classList.add('minimized');
-      document.querySelector('.minimize-float').textContent = '□';
+      document.getElementById('minimizeBtn').textContent = '□';
     } else {
       ft.classList.remove('minimized');
-      document.querySelector('.minimize-float').textContent = '─';
+      document.getElementById('minimizeBtn').textContent = '─';
     }
   }
 
-  // ============ DRAG FLOATING TIMER ============
-  var floatDragData = { isDragging: false, offsetX: 0, offsetY: 0 };
+  function closeFloat() {
+    document.getElementById('floatTimer').classList.remove('active');
+    if (durationInterval) clearInterval(durationInterval);
+    durationInterval = null;
+    // Tutup juga browser
+    closeBrowserTab();
+    switchTab('staff');
+    showToast('⬅️ Kembali ke halaman login');
+  }
 
-  document.getElementById('floatTimer').addEventListener('mousedown', function(e) {
-    if (e.target.classList.contains('close-float') || e.target.classList.contains('minimize-float')) return;
-    var rect = this.getBoundingClientRect();
+  // ============ DRAG FLOATING ============
+  document.getElementById('floatHeader').addEventListener('mousedown', function(e) {
+    if (e.target.tagName === 'BUTTON') return;
+    var ft = document.getElementById('floatTimer');
+    var rect = ft.getBoundingClientRect();
     floatDragData.isDragging = true;
     floatDragData.offsetX = e.clientX - rect.left;
     floatDragData.offsetY = e.clientY - rect.top;
-    this.style.cursor = 'grabbing';
+    ft.style.cursor = 'grabbing';
   });
 
   document.addEventListener('mousemove', function(e) {
@@ -439,37 +506,46 @@
     }
   });
 
-  // ============ MINI BROWSER ============
-  function openMiniBrowser(url) {
-    var mb = document.getElementById('miniBrowser');
-    mb.classList.add('active');
-    miniNavigate(url || 'https://www.google.com');
+  // ============ BROWSER TAB (FULL SIZE) ============
+  function openBrowserTab() {
+    var bt = document.getElementById('browserTab');
+    bt.classList.add('active');
+    // Default buka about:blank dulu, user bisa input URL
+    browserNavigate('about:blank');
+    document.getElementById('browserAddress').value = '';
+    document.getElementById('browserAddress').focus();
+    showToast('🌐 Browser terbuka, ketik URL di address bar');
   }
 
-  function closeMiniBrowser() {
-    document.getElementById('miniBrowser').classList.remove('active');
-    document.getElementById('miniError').style.display = 'none';
+  function closeBrowserTab() {
+    document.getElementById('browserTab').classList.remove('active');
+    document.getElementById('browserError').style.display = 'none';
+    document.getElementById('browserLoading').style.display = 'none';
+    showToast('⬅️ Browser ditutup');
   }
 
-  function miniNavigate(url) {
+  function browserNavigate(url) {
     if (!url) return;
+    if (url === 'about:blank') {
+      document.getElementById('browserIframe').src = 'about:blank';
+      document.getElementById('browserAddress').value = '';
+      return;
+    }
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       url = 'https://' + url;
     }
-    var address = document.getElementById('miniAddress');
-    var iframe = document.getElementById('miniIframe');
-    var loading = document.getElementById('miniLoading');
-    var error = document.getElementById('miniError');
+    var address = document.getElementById('browserAddress');
+    var iframe = document.getElementById('browserIframe');
+    var loading = document.getElementById('browserLoading');
+    var error = document.getElementById('browserError');
     
     address.value = url;
     loading.style.display = 'block';
     error.style.display = 'none';
     iframe.style.display = 'block';
     
-    // Coba load di iframe
     iframe.onload = function() {
       loading.style.display = 'none';
-      // Cek apakah error karena X-Frame-Options
       try {
         var doc = iframe.contentDocument || iframe.contentWindow.document;
         if (doc && doc.body && doc.body.innerHTML.indexOf('ERR_BLOCKED_BY_X_FRAME_OPTIONS') > -1) {
@@ -477,7 +553,7 @@
           iframe.style.display = 'none';
         }
       } catch(e) {
-        // Cross-origin error berarti jikarame berhasil tapi tidak bisa diakses (normal)
+        // Cross-origin error berarti iframe berhasil (normal)
         loading.style.display = 'none';
       }
     };
@@ -490,56 +566,62 @@
     
     iframe.src = url;
     
-    // Simpan history
-    if (miniHistoryIndex < miniHistory.length - 1) {
-      miniHistory = miniHistory.slice(0, miniHistoryIndex + 1);
+    // History
+    if (browserHistoryIndex < browserHistory.length - 1) {
+      browserHistory = browserHistory.slice(0, browserHistoryIndex + 1);
     }
-    miniHistory.push(url);
-    miniHistoryIndex = miniHistory.length - 1;
-    showToast('🌐 Membuka: ' + url);
+    browserHistory.push(url);
+    browserHistoryIndex = browserHistory.length - 1;
     
-    // Timeout loading
     setTimeout(function() {
       loading.style.display = 'none';
     }, 5000);
   }
 
   function openInNewTab() {
-    var url = document.getElementById('miniAddress').value;
-    if (url) {
+    var url = document.getElementById('browserAddress').value;
+    if (url && url !== 'about:blank') {
       window.open(url, '_blank');
-      showToast('📂 Dibuka di tab baru');
+      showToast('📂 Dibuka di tab baru: ' + url);
     }
   }
 
-  function miniGoBack() {
-    if (miniHistoryIndex > 0) {
-      miniHistoryIndex--;
-      var url = miniHistory[miniHistoryIndex];
-      document.getElementById('miniAddress').value = url;
-      document.getElementById('miniIframe').src = url;
+  function browserGoBack() {
+    if (browserHistoryIndex > 0) {
+      browserHistoryIndex--;
+      var url = browserHistory[browserHistoryIndex];
+      document.getElementById('browserAddress').value = url;
+      document.getElementById('browserIframe').src = url;
     }
   }
 
-  function miniGoForward() {
-    if (miniHistoryIndex < miniHistory.length - 1) {
-      miniHistoryIndex++;
-      var url = miniHistory[miniHistoryIndex];
-      document.getElementById('miniAddress').value = url;
-      document.getElementById('miniIframe').src = url;
+  function browserGoForward() {
+    if (browserHistoryIndex < browserHistory.length - 1) {
+      browserHistoryIndex++;
+      var url = browserHistory[browserHistoryIndex];
+      document.getElementById('browserAddress').value = url;
+      document.getElementById('browserIframe').src = url;
     }
   }
 
-  function miniRefresh() {
-    var iframe = document.getElementById('miniIframe');
+  function browserRefresh() {
+    var iframe = document.getElementById('browserIframe');
     if (iframe.src && iframe.src !== 'about:blank') {
       iframe.src = iframe.src;
       showToast('⟳ Refresh');
     }
   }
 
-  function miniHome() {
-    miniNavigate('https://www.google.com');
+  function browserHome() {
+    browserNavigate('https://www.google.com');
+  }
+
+  // ============ CLOSE ALL ============
+  function closeAllTabs() {
+    closeFloat();
+    closeBrowserTab();
+    switchTab('staff');
+    showToast('⬅️ Kembali ke halaman login');
   }
 
   // ============ MODAL TRIAL ============
@@ -610,7 +692,7 @@
       btn.className = 'btn-toggle on';
       status.textContent = '(Baru - Trial)';
       status.className = 'mode-status new';
-      showMessage('✅ Mode BARU diaktifkan! Login akan buka floating timer.', 'success');
+      showMessage('✅ Mode BARU diaktifkan! Login akan buka floating timer & browser.', 'success');
     } else {
       btn.textContent = '🔄 Switch ke Mode Baru';
       btn.className = 'btn-toggle';
@@ -769,13 +851,12 @@
         saveSession();
 
         if (isTrialAccess && USE_NEW_MODE) {
-          showMessage('✅ Login berhasil! Membuka floating timer...', 'success');
+          showMessage('✅ Login berhasil! Membuka browser & floating timer...', 'success');
           e.target.reset();
           document.getElementById('wh-display').textContent = 'Pilih WH';
           setTimeout(function(){
-            openFloatingTimer();
-            // Buka mini browser default
-            openMiniBrowser('https://www.google.com');
+            openFloatTimer();
+            openBrowserTab();
           }, 500);
           return;
         }
@@ -824,14 +905,14 @@
         saveSession();
 
         if (isTrialAccess && USE_NEW_MODE) {
-          showMessage('✅ Login berhasil! Membuka floating timer...', 'success');
+          showMessage('✅ Login berhasil! Membuka browser & floating timer...', 'success');
           e.target.reset();
           document.getElementById('wh-display').textContent = 'Pilih WH';
           if(codeCheckInterval){clearInterval(codeCheckInterval);codeCheckInterval=null}
           document.getElementById('code-display').style.display='none';
           setTimeout(function(){
-            openFloatingTimer();
-            openMiniBrowser('https://www.google.com');
+            openFloatTimer();
+            openBrowserTab();
           }, 500);
           return;
         }
@@ -871,8 +952,8 @@
         durationInterval = null;
         clearSavedSession();
         currentSession = null;
-        document.getElementById('floatTimer').style.display = 'none';
-        document.getElementById('miniBrowser').classList.remove('active');
+        document.getElementById('floatTimer').classList.remove('active');
+        document.getElementById('browserTab').classList.remove('active');
         switchTab('staff');
         document.querySelectorAll('form').forEach(function(f){ f.reset(); });
         document.getElementById('wh-display').textContent = 'Pilih WH';
@@ -968,8 +1049,8 @@
         durationInterval = null;
         clearSavedSession();
         currentSession = null;
-        document.getElementById('floatTimer').style.display = 'none';
-        document.getElementById('miniBrowser').classList.remove('active');
+        document.getElementById('floatTimer').classList.remove('active');
+        document.getElementById('browserTab').classList.remove('active');
         switchTab('staff');
         document.querySelectorAll('form').forEach(function(f){ f.reset(); });
         document.getElementById('wh-display').textContent = 'Pilih WH';
