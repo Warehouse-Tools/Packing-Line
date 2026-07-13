@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Packing Line Manpower Tracker</title>
   <style>
+    /* ===== RESET & GLOBAL ===== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #e8f4f8 0%, #d4e8f0 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; color: #333; }
     .container { background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); padding: 35px; max-width: 550px; width: 100%; position: relative; }
@@ -251,15 +252,25 @@
       color: #666;
       padding: 30px;
       max-width: 400px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
     .browser-content .error-msg .icon { font-size: 48px; margin-bottom: 10px; }
     .browser-content .error-msg .open-link {
-      color: #1a73e8;
-      text-decoration: underline;
-      cursor: pointer;
+      display: inline-block;
+      background: #1a73e8;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      text-decoration: none;
       font-weight: 600;
+      margin-top: 10px;
+      cursor: pointer;
+      border: none;
+      font-size: 14px;
     }
-    .browser-content .error-msg .open-link:hover { color: #1557b0; }
+    .browser-content .error-msg .open-link:hover { background: #1557b0; }
 
     @media (max-width: 600px) {
       #floatTimer { min-width: 240px; right: 10px; bottom: 10px; }
@@ -314,7 +325,7 @@
       <div class="icon">🔒</div>
       <h3>Situs tidak bisa ditampilkan di sini</h3>
       <p style="margin:10px 0;">Beberapa situs (seperti Google) melarang tampil di dalam bingkai.</p>
-      <p><span class="open-link" onclick="openInNewTab()">📂 Klik di sini untuk buka di tab baru</span></p>
+      <button class="open-link" onclick="openInNewTab()">📂 Buka di Tab Baru</button>
     </div>
   </div>
 </div>
@@ -508,7 +519,6 @@
   function openBrowserTab() {
     var bt = document.getElementById('browserTab');
     bt.classList.add('active');
-    // Default buka Google
     browserNavigate('https://www.google.com');
     showToast('🌐 Browser terbuka');
   }
@@ -521,11 +531,6 @@
 
   function browserNavigate(url) {
     if (!url) return;
-    if (url === 'about:blank') {
-      document.getElementById('browserIframe').src = 'about:blank';
-      document.getElementById('browserAddress').value = '';
-      return;
-    }
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       url = 'https://' + url;
     }
@@ -539,7 +544,6 @@
     error.style.display = 'none';
     iframe.style.display = 'block';
     
-    // Reset iframe src untuk memuat ulang
     iframe.src = url;
     
     iframe.onload = function() {
@@ -551,7 +555,6 @@
           iframe.style.display = 'none';
         }
       } catch(e) {
-        // Cross-origin error berarti iframe berhasil (normal)
         loading.style.display = 'none';
       }
     };
@@ -562,7 +565,6 @@
       iframe.style.display = 'none';
     };
     
-    // History
     if (browserHistoryIndex < browserHistory.length - 1) {
       browserHistory = browserHistory.slice(0, browserHistoryIndex + 1);
     }
@@ -955,7 +957,7 @@
     });
   }
 
-  // ============ REQUEST TAB BARU KE TL ============
+  // ============ REQUEST TAB BARU ============
   function requestNewTabToTL() {
     if(!currentSession) {
       alert('⚠️ Silakan login terlebih dahulu.');
@@ -987,6 +989,7 @@
         showMessage('📩 Request terkirim. Tunggu approve dari TL.', 'info');
       } else {
         alert('❌ Gagal: ' + (r.message || 'Unknown error'));
+        showMessage('❌ Gagal: ' + (r.message || 'Unknown error'), 'error');
       }
     })
     .catch(function(e){
@@ -1131,6 +1134,14 @@
         html += '</div>';
       }
 
+      if(data.tabRequests && data.tabRequests.length > 0) {
+        html += '<div style="background:#fff3e0;padding:10px 15px;border-radius:8px;margin-bottom:15px;font-weight:700;">📩 '+data.tabRequests.length+' Request Tab Baru: ';
+        data.tabRequests.forEach(function(r){
+          html += '<button onclick="approveTabRequestFull('+r.row+',\''+r.sessionId+'\')" style="background:#43a047;color:white;border:none;padding:5px 12px;border-radius:5px;margin:2px 4px;cursor:pointer;">✅ '+r.nama+' (L'+r.line+')</button>';
+        });
+        html += '</div>';
+      }
+
       html += '<div style="display:grid;grid-template-columns:repeat(11,1fr);gap:8px;">';
       data.allPackingLines.forEach(function(l){
         var bg = l.status === 'Occupied' ? '#ffebee' : '#e8f5e9';
@@ -1161,6 +1172,20 @@
       headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body:'action=approveRequest&data='+encodeURIComponent(JSON.stringify({rowId:rowId,teamLeader:currentTLName}))
     }).then(function(){ refreshDashboardFull(); });
+  }
+
+  function approveTabRequestFull(rowId, sessionId) {
+    if(!confirm('✅ Approve request tab baru ini?')) return;
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=approveTabRequest&data='+encodeURIComponent(JSON.stringify({rowId:rowId, sessionId:sessionId, teamLeader:currentTLName}))
+    })
+    .then(function(r){return r.json()})
+    .then(function(r){
+      if(r.success){ alert('✅ '+r.message); refreshDashboardFull(); }
+      else { alert('❌ Gagal: '+r.message); }
+    });
   }
 
   function generateCodeFull() {
