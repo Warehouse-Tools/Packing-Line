@@ -444,7 +444,6 @@
     floatMinimized = false;
     document.getElementById('minimizeBtn').textContent = '─';
     updateFloatTimer();
-    // Hentikan timer lama jika ada
     if (durationInterval) {
       clearInterval(durationInterval);
       durationInterval = null;
@@ -481,16 +480,12 @@
 
   // ===== CLOSE FLOAT DENGAN KEMBALI KE LOGIN =====
   function closeFloatWithBack() {
-    // Hentikan timer
     if (durationInterval) {
       clearInterval(durationInterval);
       durationInterval = null;
     }
-    // Tutup float
     document.getElementById('floatTimer').classList.remove('active');
-    // Tutup browser
     closeBrowserTab();
-    // Kembali ke tab staff
     switchTab('staff');
     showToast('⬅️ Kembali ke halaman login');
   }
@@ -741,6 +736,7 @@
     } else if(tab==='active-session'){
       document.querySelectorAll('.tab')[2].classList.add('active');
       document.getElementById('active-session-tab').classList.add('active');
+      // Perbarui display di sini agar tombol "Kembali" muncul
       updateActiveSessionDisplay();
     }
   }
@@ -1071,7 +1067,7 @@
     });
   }
 
-  // ============ UPDATE DISPLAY ============
+  // ============ UPDATE DISPLAY (SESI AKTIF) ============
   function updateActiveSessionDisplay() {
     var c = document.getElementById('active-session-info');
     if(!currentSession){
@@ -1092,6 +1088,8 @@
       (currentSession.teamLeader ? '<p><strong>👨‍💼 TL:</strong> ' + currentSession.teamLeader + '</p>' : '') +
       '<p><small>🕐 Login: ' + currentSession.loginTime.toLocaleString('id-ID') + '</small></p>' +
       '<div class="session-id-display">🆔 Session ID: ' + currentSession.id + '</div>' +
+      // ===== TOMBOL KEMBALI KE LOGIN (DI SINI) =====
+      '<button onclick="closeFloatWithBack()" style="background:linear-gradient(135deg, #795548 0%, #5d4037 100%);color:white;border:none;padding:10px;border-radius:8px;cursor:pointer;margin-top:10px;width:100%;font-weight:700;">⬅️ Kembali ke Login</button>' +
       '<button onclick="checkSessionManually()" class="btn-check-session">🔍 CEK SESSION MANUAL</button>' +
       '<button onclick="performLogout()" class="btn-danger" style="margin-top:10px;width:100%;font-size:17px;">🔒 LOGOUT / AKHIRI SESI</button>' +
       '</div>';
@@ -1124,8 +1122,9 @@
       localStorage.setItem('tlPw', pw.trim());
       localStorage.setItem('tlWH', v.warehouse);
       localStorage.setItem('openDashboard', 'true');
-      // Buka dashboard di tab baru dengan URL yang sama
-      window.open(window.location.href.split('?')[0], '_blank');
+      // BUKA DASHBOARD DI TAB BARU DENGAN URL YANG SAMA
+      var dashboardUrl = window.location.href.split('?')[0];
+      window.open(dashboardUrl, '_blank');
     })
   }
 
