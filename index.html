@@ -62,7 +62,7 @@
     .trial-watermark { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ff9800; color: white; padding: 5px 20px; border-radius: 20px; font-size: 12px; font-weight: 700; z-index: 999; opacity: 0.7; display: none; }
     .trial-watermark.show { display: block; }
 
-    /* ===== FLOATING TIMESTAMP (LENGKAP) ===== */
+    /* ===== FLOATING TIMESTAMP ===== */
     #floatTimer {
       position: fixed;
       bottom: 20px;
@@ -146,7 +146,7 @@
     #floatTimer.minimized .float-header .timer-badge { display: none; }
     #floatTimer.minimized .float-header .title { font-size: 12px; }
     
-    /* ===== BROWSER TAB (FULL SIZE) ===== */
+    /* ===== BROWSER TAB ===== */
     #browserTab {
       display: none;
       position: fixed;
@@ -261,7 +261,6 @@
     }
     .browser-content .error-msg .open-link:hover { color: #1557b0; }
 
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 600px) {
       #floatTimer { min-width: 240px; right: 10px; bottom: 10px; }
       #floatTimer .float-body { padding: 10px 12px; font-size: 12px; }
@@ -295,7 +294,7 @@
 <!-- ===== DASHBOARD TL ===== -->
 <button class="dashboard-btn" onclick="showDashboard()">📊 Dashboard TL</button>
 
-<!-- ===== BROWSER TAB (FULL SIZE) ===== -->
+<!-- ===== BROWSER TAB ===== -->
 <div id="browserTab">
   <div class="browser-toolbar">
     <button class="nav-btn" onclick="browserGoBack()" title="Kembali">◀</button>
@@ -320,7 +319,7 @@
   </div>
 </div>
 
-<!-- ===== FLOATING TIMESTAMP (LENGKAP) ===== -->
+<!-- ===== FLOATING TIMESTAMP ===== -->
 <div id="floatTimer">
   <div class="float-header" id="floatHeader">
     <span class="title">⏱️ Sesi Aktif</span>
@@ -340,14 +339,14 @@
     <div class="session-id" id="fSessionId">🆔 Session ID: -</div>
     <div class="btn-group">
       <button class="btn-request-tab" onclick="requestNewTabToTL()">📩 Request Tab Baru ke TL</button>
-      <button class="btn-back-main" onclick="closeAllTabs()">⬅️ Kembali ke Login</button>
+      <button class="btn-back-main" onclick="closeFloat()">⬅️ Kembali ke Login</button>
       <button class="btn-check" onclick="checkSessionManually()">🔍 CEK SESSION MANUAL</button>
       <button class="btn-logout" onclick="performLogout()">🔒 LOGOUT / AKHIRI SESI</button>
     </div>
   </div>
 </div>
 
-<!-- ===== MAIN CONTAINER (LOGIN) ===== -->
+<!-- ===== MAIN CONTAINER ===== -->
 <div class="container" id="mainContainer">
   <div class="header">
     <div class="logo">🏭</div>
@@ -469,7 +468,6 @@
     document.getElementById('floatTimer').classList.remove('active');
     if (durationInterval) clearInterval(durationInterval);
     durationInterval = null;
-    // Tutup juga browser
     closeBrowserTab();
     switchTab('staff');
     showToast('⬅️ Kembali ke halaman login');
@@ -506,22 +504,19 @@
     }
   });
 
-  // ============ BROWSER TAB (FULL SIZE) ============
+  // ============ BROWSER TAB ============
   function openBrowserTab() {
     var bt = document.getElementById('browserTab');
     bt.classList.add('active');
-    // Default buka about:blank dulu, user bisa input URL
-    browserNavigate('about:blank');
-    document.getElementById('browserAddress').value = '';
-    document.getElementById('browserAddress').focus();
-    showToast('🌐 Browser terbuka, ketik URL di address bar');
+    // Default buka Google
+    browserNavigate('https://www.google.com');
+    showToast('🌐 Browser terbuka');
   }
 
   function closeBrowserTab() {
     document.getElementById('browserTab').classList.remove('active');
     document.getElementById('browserError').style.display = 'none';
     document.getElementById('browserLoading').style.display = 'none';
-    showToast('⬅️ Browser ditutup');
   }
 
   function browserNavigate(url) {
@@ -544,6 +539,9 @@
     error.style.display = 'none';
     iframe.style.display = 'block';
     
+    // Reset iframe src untuk memuat ulang
+    iframe.src = url;
+    
     iframe.onload = function() {
       loading.style.display = 'none';
       try {
@@ -563,8 +561,6 @@
       error.style.display = 'block';
       iframe.style.display = 'none';
     };
-    
-    iframe.src = url;
     
     // History
     if (browserHistoryIndex < browserHistory.length - 1) {
@@ -614,14 +610,6 @@
 
   function browserHome() {
     browserNavigate('https://www.google.com');
-  }
-
-  // ============ CLOSE ALL ============
-  function closeAllTabs() {
-    closeFloat();
-    closeBrowserTab();
-    switchTab('staff');
-    showToast('⬅️ Kembali ke halaman login');
   }
 
   // ============ MODAL TRIAL ============
@@ -995,7 +983,7 @@
     .then(function(r){ return r.json(); })
     .then(function(r){
       if(r.success){
-        alert('✅ Request terkirim! Tunggu approve dari Team Leader.');
+        alert('✅ Request terkirim! Tunggu approve dari Team Leader.\n\nRequest ID: ' + (r.requestId || 'OK'));
         showMessage('📩 Request terkirim. Tunggu approve dari TL.', 'info');
       } else {
         alert('❌ Gagal: ' + (r.message || 'Unknown error'));
@@ -1003,6 +991,7 @@
     })
     .catch(function(e){
       alert('❌ Gagal mengirim request: ' + e.message);
+      showMessage('❌ Gagal: ' + e.message, 'error');
     });
   }
 
