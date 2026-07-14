@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Packing Line - Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #e8f4f8 0%, #d4e8f0 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; color: #333; }
+    .container { background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); padding: 35px; max-width: 550px; width: 100%; }
+    .header { text-align: center; margin-bottom: 25px; }
+    .header .logo { font-size: 45px; }
+    .header h1 { color: #1a73e8; font-size: 22px; font-weight: 700; }
+    .header .subtitle { color: #1a73e8; font-size: 14px; font-weight: 600; }
+    .header .wh-badge { background: #1a73e8; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-block; margin-top: 4px; }
+    .time-display { text-align: center; font-size: 13px; color: #666; margin-bottom: 15px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 6px; color: #555; font-weight: 600; font-size: 13px; }
+    input, select { width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 15px; background: #fafafa; color: #333; }
+    input:focus, select:focus { border-color: #1a73e8; outline: none; }
+    button { width: 100%; padding: 14px; background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.2s; }
+    button:hover { opacity: 0.9; }
+    .btn-trial { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; width: auto; margin: 5px auto; display: block; transition: all 0.3s; }
+    .btn-trial:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(255,152,0,0.4); }
+    .message { margin-top: 12px; padding: 12px; border-radius: 10px; display: none; font-size: 13px; font-weight: 600; text-align: center; }
+    .message.success { background: #e8f5e9; color: #2e7d32; display: block; }
+    .message.error { background: #ffebee; color: #c62828; display: block; }
+    .message.info { background: #e3f2fd; color: #1565c0; display: block; }
+    .message.warning { background: #fff3e0; color: #e65100; display: block; }
+    .trial-banner { background: #fff3e0; padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: center; border: 2px solid #ff9800; display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; }
+    .trial-banner .label { font-weight: 700; color: #ff9800; font-size: 14px; }
+    .btn-toggle { background: #1a73e8; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; width: auto; margin: 0; }
+    .btn-toggle.on { background: #e53935; }
+    .mode-status { font-weight: 700; font-size: 14px; }
+    .mode-status.old { color: #e53935; }
+    .mode-status.new { color: #43a047; }
+    .login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 99999; display: none; justify-content: center; align-items: center; }
+    .login-box { background: white; padding: 40px; border-radius: 20px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .login-box h2 { color: #1a73e8; margin-bottom: 10px; }
+    .login-box .lock-icon { font-size: 50px; margin-bottom: 15px; }
+    .login-box input { margin: 10px 0; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; width: 100%; }
+    .login-box input:focus { border-color: #1a73e8; outline: none; }
+    .login-box .error-msg { color: #e53935; font-size: 13px; margin-top: 5px; display: none; }
+    .login-box .hint { color: #999; font-size: 12px; margin-top: 15px; }
+    .login-box .btn-close-modal { background: #e53935; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; margin-top: 10px; }
+    .trial-watermark { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ff9800; color: white; padding: 5px 20px; border-radius: 20px; font-size: 12px; font-weight: 700; z-index: 999; opacity: 0.7; display: none; }
+    .trial-watermark.show { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="trial-watermark" id="trialWatermark">🔬 TRIAL MODE - AKSES TERBATAS</div>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="lock-icon">🔐</div>
+    <h2>Akses Trial Terbatas</h2>
+    <p style="color:#666;font-size:14px;margin-bottom:15px;">Masukkan password untuk mengakses mode trial</p>
+    <input type="password" id="trialPassword" placeholder="Masukkan password trial..." onkeydown="if(event.key==='Enter'){checkTrialPassword();}">
+    <button onclick="checkTrialPassword()" style="margin-top:5px;">🔓 Buka Akses Trial</button>
+    <div class="error-msg" id="loginError">❌ Password salah! Coba lagi.</div>
+    <button class="btn-close-modal" onclick="closeTrialModal()">✕ Tutup</button>
+    <div class="hint">💡 Hubungi administrator untuk mendapatkan akses</div>
+  </div>
+</div>
+
+<div class="container" id="mainContainer">
+  <div class="header">
+    <div class="logo">🏭</div>
+    <h1>PACKING LINE</h1>
+    <p class="subtitle">MANPOWER TRACKER</p>
+    <span class="wh-badge" id="wh-display">Pilih WH</span>
+    <div class="time-display" id="time-display"></div>
+  </div>
+
+  <div id="trialBanner" style="display:none;" class="trial-banner">
+    <span class="label">🔬 TRIAL MODE</span>
+    <button class="btn-toggle" id="modeToggle" onclick="toggleMode()">🔄 Switch ke Mode Baru</button>
+    <span class="mode-status old" id="modeStatus">(Lama)</span>
+    <button onclick="disableTrial()" style="background:#e53935;color:white;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-weight:700;font-size:11px;width:auto;">✕ Tutup Trial</button>
+  </div>
+
+  <button class="btn-trial" id="btnTrial" onclick="openTrialModal()">🔬 Mode Trial</button>
+
+  <form onsubmit="login(event)" autocomplete="off" style="margin-top:15px;">
+    <div class="form-group"><label>🏭 Warehouse</label><select id="wh" required onchange="document.getElementById('wh-display').textContent=this.value||'Pilih WH'"><option value="">Pilih Warehouse...</option><option value="WH BGO">WH BGO</option><option value="WH CBN">WH CBN</option><option value="WH SRG">WH SRG</option><option value="WH PGS">WH PGS</option><option value="WH BIT">WH BIT</option></select></div>
+    <div class="form-group"><label>👤 Nama Lengkap</label><input type="text" id="nama" required placeholder="Masukkan nama lengkap"></div>
+    <div class="form-group"><label>💼 Role / Posisi</label><select id="role" required><option value="">Pilih Role...</option><option value="Checker Outbound">Checker Outbound</option><option value="Picker/Sorter">Picker/Sorter</option><option value="Loader">Loader</option><option value="Helper">Helper</option></select></div>
+    <div class="form-group"><label>🔑 Staff ID</label><input type="password" id="staffId" required placeholder="Masukkan Staff ID" minlength="4"><small>Minimal 4 karakter</small></div>
+    <div class="form-group"><label>📍 Pilih Packing Line</label><select id="line" required><option value="">Pilih Line...</option></select></div>
+    <button type="submit">🔓 MASUK / LOGIN</button>
+  </form>
+  <div id="message" class="message"></div>
+</div>
+
+<script>
+  var TRIAL_PASSWORD = 'trial123';
+  var ALLOWED_USERS = ['Sugianto', 'Admin', 'Test'];
+  var API_URL = 'https://script.google.com/macros/s/AKfycbwvQNFe9PVrXnh1rP-s41VWKO-KcLO-NfC-bPdabMbr5V1AvgwEnEizfkiQQPOmy0ug/exec';
+  var isTrial = false;
+  var isNewMode = false;
+
+  function updateClock() {
+    document.getElementById('time-display').textContent = new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) + ' | ' + new Date().toLocaleTimeString('id-ID');
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  function initPackingLines() {
+    var o='';
+    for(var i=1;i<=22;i++) o+='<option value="'+i+'">Packing Line '+i+'</option>';
+    document.getElementById('line').innerHTML='<option value="">Pilih Line...</option>'+o;
+  }
+  initPackingLines();
+
+  function openTrialModal() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('trialPassword').value = '';
+    document.getElementById('trialPassword').focus();
+    document.getElementById('loginError').style.display = 'none';
+  }
+
+  function closeTrialModal() {
+    document.getElementById('loginScreen').style.display = 'none';
+  }
+
+  function checkTrialPassword() {
+    var input = document.getElementById('trialPassword');
+    var error = document.getElementById('loginError');
+    if (input.value === TRIAL_PASSWORD) {
+      isTrial = true;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('trialWatermark').className = 'trial-watermark show';
+      document.getElementById('trialBanner').style.display = 'flex';
+      document.getElementById('btnTrial').style.display = 'none';
+      showMessage('✅ Mode Trial diaktifkan!', 'success');
+    } else {
+      error.style.display = 'block';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  function disableTrial() {
+    isTrial = false;
+    isNewMode = false;
+    document.getElementById('trialBanner').style.display = 'none';
+    document.getElementById('trialWatermark').className = 'trial-watermark';
+    document.getElementById('btnTrial').style.display = 'block';
+    showMessage('❌ Mode Trial ditutup.', 'info');
+  }
+
+  function toggleMode() {
+    isNewMode = !isNewMode;
+    var btn = document.getElementById('modeToggle');
+    var status = document.getElementById('modeStatus');
+    if (isNewMode) {
+      btn.textContent = '🔄 Switch ke Mode Lama';
+      btn.className = 'btn-toggle on';
+      status.textContent = '(Baru)';
+      status.className = 'mode-status new';
+      showMessage('✅ Mode BARU aktif! Login akan buka tab baru.', 'success');
+    } else {
+      btn.textContent = '🔄 Switch ke Mode Baru';
+      btn.className = 'btn-toggle';
+      status.textContent = '(Lama)';
+      status.className = 'mode-status old';
+      showMessage('↩️ Mode LAMA.', 'info');
+    }
+  }
+
+  function isUserAllowed(nama) {
+    if (!isTrial) return true;
+    var namaLower = nama.toLowerCase().trim();
+    for (var i = 0; i < ALLOWED_USERS.length; i++) {
+      if (ALLOWED_USERS[i].toLowerCase().trim() === namaLower) return true;
+    }
+    return false;
+  }
+
+  function login(e) {
+    e.preventDefault();
+    var nama = document.getElementById('nama').value.trim();
+    var role = document.getElementById('role').value;
+    var staffId = document.getElementById('staffId').value.trim();
+    var line = document.getElementById('line').value;
+    var wh = document.getElementById('wh').value;
+
+    if (!nama || !role || !staffId || !line || !wh) {
+      showMessage('Semua field harus diisi!', 'error');
+      return;
+    }
+    if (staffId.length < 4) {
+      showMessage('Staff ID minimal 4 karakter!', 'error');
+      return;
+    }
+    if (isTrial && !isUserAllowed(nama)) {
+      showMessage('⛔ Akses ditolak! Nama "' + nama + '" tidak terdaftar di trial.', 'error');
+      return;
+    }
+
+    showMessage('Memproses...', 'info');
+
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'action=loginStaff&data=' + encodeURIComponent(JSON.stringify({ nama: nama, role: role, staffId: staffId, packingLine: line, wh: wh }))
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (r.success) {
+        showMessage('✅ Login berhasil!', 'success');
+
+        var sessionData = {
+          id: r.sessionId,
+          nama: nama,
+          line: line,
+          type: 'Staff',
+          loginTime: new Date().toISOString()
+        };
+        localStorage.setItem('packingSession', JSON.stringify(sessionData));
+
+        var baseUrl = window.location.href.split('?')[0];
+        var mainUrl = baseUrl.replace('login.html', 'packing.html');
+        if (mainUrl === baseUrl) {
+          mainUrl = baseUrl.replace(/\/[^/]*$/, '/packing.html');
+        }
+
+        if (isTrial && isNewMode) {
+          var params = new URLSearchParams();
+          params.set('sessionId', r.sessionId);
+          params.set('nama', nama);
+          params.set('line', line);
+          params.set('type', 'Staff');
+          params.set('loginTime', new Date().toISOString());
+          var popupUrl = mainUrl + '?' + params.toString();
+          window.open(popupUrl, '_blank');
+        } else {
+          window.location.href = mainUrl;
+        }
+
+        document.querySelector('form').reset();
+        document.getElementById('wh-display').textContent = 'Pilih WH';
+      } else {
+        showMessage(r.message, 'error');
+      }
+    })
+    .catch(function(e) {
+      showMessage('Gagal: ' + e.message, 'error');
+    });
+  }
+
+  function showMessage(tx, tp) {
+    var m = document.getElementById('message');
+    m.textContent = tx;
+    m.className = 'message ' + tp;
+    clearTimeout(m._t);
+    m._t = setTimeout(function() { m.className = 'message'; }, 5000);
+  }
+</script>
+</body>
+</html>
