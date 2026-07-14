@@ -15,7 +15,6 @@
     .header .wh-badge { background: #1a73e8; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-block; margin-top: 4px; }
     .time-display { text-align: center; font-size: 13px; color: #666; margin-bottom: 15px; }
     
-    /* ===== TABS ===== */
     .tabs { display: flex; margin-bottom: 25px; border-bottom: 2px solid #e8e8e8; }
     .tab { flex: 1; padding: 12px 5px; text-align: center; cursor: pointer; font-weight: 600; color: #999; border-bottom: 3px solid transparent; font-size: 13px; }
     .tab.active { color: #1a73e8; border-bottom-color: #1a73e8; }
@@ -449,7 +448,8 @@
     if (input.value === TRIAL_PASSWORD) {
       isTrial = true;
       document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('trialWatermark').className = 'trial-watermark show';
+      // PERBAIKAN: tambahkan class 'show' dengan benar
+      document.getElementById('trialWatermark').style.display = 'block';
       document.getElementById('trialBanner').style.display = 'flex';
       document.getElementById('btnTrial').style.display = 'none';
       showMessage('✅ Mode Trial diaktifkan!', 'success');
@@ -464,7 +464,7 @@
     isTrial = false;
     isNewMode = false;
     document.getElementById('trialBanner').style.display = 'none';
-    document.getElementById('trialWatermark').className = 'trial-watermark';
+    document.getElementById('trialWatermark').style.display = 'none';
     document.getElementById('btnTrial').style.display = 'block';
     showMessage('❌ Mode Trial ditutup.', 'info');
   }
@@ -660,11 +660,8 @@
 
   // ============ INIT ============
   window.onload = function() {
-    // Jalankan update clock
     updateClock();
     setInterval(updateClock, 1000);
-    
-    // Inisialisasi packing lines
     initPackingLines();
     
     if (localStorage.getItem('openDashboard') === 'true') {
