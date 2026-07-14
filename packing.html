@@ -450,9 +450,13 @@
   }
 
   function goBackToLogin() {
+    // Cari file login.html di folder yang sama
     var loginUrl = window.location.href.replace('packing.html', 'login.html');
+    // Jika tidak ada perubahan, coba dengan path yang berbeda
     if (loginUrl === window.location.href) {
-      loginUrl = loginUrl.replace(/\/[^/]*$/, '/login.html');
+      var parts = window.location.href.split('/');
+      parts.pop();
+      loginUrl = parts.join('/') + '/login.html';
     }
     window.location.href = loginUrl;
   }
@@ -609,6 +613,9 @@
         document.getElementById('floatTimer').style.display = 'none';
         document.getElementById('browserTab').style.display = 'none';
         showToast('⚠️ Sesi telah diakhiri oleh Team Leader.');
+        setTimeout(function() {
+          goBackToLogin();
+        }, 1500);
       } else {
         alert('⚠️ Tidak bisa mengecek session (data server kosong)');
       }
@@ -645,7 +652,7 @@
         document.getElementById('floatTimer').style.display = 'none';
         document.getElementById('browserTab').style.display = 'none';
         setTimeout(function() {
-          window.location.href = window.location.href.replace('packing.html', 'login.html');
+          goBackToLogin();
         }, 1000);
       } else {
         alert('❌ Gagal logout: ' + r.message);
@@ -661,7 +668,7 @@
     if (!restoreSession()) {
       document.getElementById('browserTab').style.display = 'none';
       document.getElementById('floatTimer').style.display = 'none';
-      document.body.innerHTML = '<div style="text-align:center;padding:40px;background:white;border-radius:20px;max-width:400px;margin:auto;"><p style="font-size:48px;">🔒</p><h3>Tidak ada session aktif</h3><p style="color:#666;margin-top:10px;">Silakan login dari halaman utama.</p><button onclick="window.location.href=\'login.html\'" style="margin-top:20px;background:#1a73e8;color:white;border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-weight:700;width:auto;">Kembali ke Login</button></div>';
+      document.body.innerHTML = '<div style="text-align:center;padding:40px;background:white;border-radius:20px;max-width:400px;margin:auto;"><p style="font-size:48px;">🔒</p><h3>Tidak ada session aktif</h3><p style="color:#666;margin-top:10px;">Silakan login dari halaman utama.</p><button onclick="goBackToLogin()" style="margin-top:20px;background:#1a73e8;color:white;border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-weight:700;width:auto;">Kembali ke Login</button></div>';
       return;
     }
 
