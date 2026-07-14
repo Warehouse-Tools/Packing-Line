@@ -14,12 +14,21 @@
     .header .subtitle { color: #1a73e8; font-size: 14px; font-weight: 600; }
     .header .wh-badge { background: #1a73e8; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-block; margin-top: 4px; }
     .time-display { text-align: center; font-size: 13px; color: #666; margin-bottom: 15px; }
+    
+    /* ===== TABS ===== */
+    .tabs { display: flex; margin-bottom: 25px; border-bottom: 2px solid #e8e8e8; }
+    .tab { flex: 1; padding: 12px 5px; text-align: center; cursor: pointer; font-weight: 600; color: #999; border-bottom: 3px solid transparent; font-size: 13px; }
+    .tab.active { color: #1a73e8; border-bottom-color: #1a73e8; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
     .form-group { margin-bottom: 18px; }
     label { display: block; margin-bottom: 6px; color: #555; font-weight: 600; font-size: 13px; }
     input, select { width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 15px; background: #fafafa; color: #333; }
     input:focus, select:focus { border-color: #1a73e8; outline: none; }
     button { width: 100%; padding: 14px; background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.2s; }
     button:hover { opacity: 0.9; }
+    .btn-request { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); font-size: 12px; width: auto; padding: 8px 15px; margin-top: 5px; }
     .btn-trial { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; width: auto; margin: 5px auto; display: block; transition: all 0.3s; }
     .btn-trial:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(255,152,0,0.4); }
     .message { margin-top: 12px; padding: 12px; border-radius: 10px; display: none; font-size: 13px; font-weight: 600; text-align: center; }
@@ -27,6 +36,15 @@
     .message.error { background: #ffebee; color: #c62828; display: block; }
     .message.info { background: #e3f2fd; color: #1565c0; display: block; }
     .message.warning { background: #fff3e0; color: #e65100; display: block; }
+    
+    .dashboard-btn { position: fixed; top: 15px; right: 15px; padding: 8px 18px; background: #1a73e8; color: white; border: none; border-radius: 16px; font-weight: 700; cursor: pointer; z-index: 1000; font-size: 13px; box-shadow: 0 2px 10px rgba(26,115,232,0.3); width: auto; margin: 0; letter-spacing: 0.5px; transition: all 0.2s; }
+    .dashboard-btn:hover { transform: scale(1.05); box-shadow: 0 4px 16px rgba(26,115,232,0.4); }
+    
+    .session-card { background: #f8fafc; padding: 20px; border-radius: 12px; margin: 12px 0; border-left: 4px solid #1a73e8; }
+    .session-id-display { background: #f0f0f0; padding: 5px 10px; border-radius: 4px; font-size: 11px; color: #666; text-align: center; margin-top: 5px; }
+    .btn-check-session { background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: 700; }
+    .btn-danger { background: linear-gradient(135deg, #e53935 0%, #c62828 100%); }
+    
     .trial-banner { background: #fff3e0; padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: center; border: 2px solid #ff9800; display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; }
     .trial-banner .label { font-weight: 700; color: #ff9800; font-size: 14px; }
     .btn-toggle { background: #1a73e8; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; width: auto; margin: 0; }
@@ -34,6 +52,7 @@
     .mode-status { font-weight: 700; font-size: 14px; }
     .mode-status.old { color: #e53935; }
     .mode-status.new { color: #43a047; }
+    
     .login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 99999; display: none; justify-content: center; align-items: center; }
     .login-box { background: white; padding: 40px; border-radius: 20px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
     .login-box h2 { color: #1a73e8; margin-bottom: 10px; }
@@ -45,12 +64,15 @@
     .login-box .btn-close-modal { background: #e53935; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; margin-top: 10px; }
     .trial-watermark { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ff9800; color: white; padding: 5px 20px; border-radius: 20px; font-size: 12px; font-weight: 700; z-index: 999; opacity: 0.7; display: none; }
     .trial-watermark.show { display: block; }
+    .code-display { background: #e8f5e9; border: 2px solid #66bb6a; border-radius: 10px; padding: 10px; text-align: center; font-size: 14px; font-weight: 700; color: #2e7d32; margin: 8px 0; display: none; }
   </style>
 </head>
 <body>
 
+<!-- ===== TRIAL WATERMARK ===== -->
 <div class="trial-watermark" id="trialWatermark">🔬 TRIAL MODE - AKSES TERBATAS</div>
 
+<!-- ===== LOCK SCREEN ===== -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="lock-icon">🔐</div>
@@ -64,6 +86,10 @@
   </div>
 </div>
 
+<!-- ===== DASHBOARD TL ===== -->
+<button class="dashboard-btn" onclick="showDashboard()">📊 Dashboard TL</button>
+
+<!-- ===== MAIN CONTAINER ===== -->
 <div class="container" id="mainContainer">
   <div class="header">
     <div class="logo">🏭</div>
@@ -73,6 +99,7 @@
     <div class="time-display" id="time-display"></div>
   </div>
 
+  <!-- ===== TRIAL BANNER ===== -->
   <div id="trialBanner" style="display:none;" class="trial-banner">
     <span class="label">🔬 TRIAL MODE</span>
     <button class="btn-toggle" id="modeToggle" onclick="toggleMode()">🔄 Switch ke Mode Baru</button>
@@ -82,24 +109,60 @@
 
   <button class="btn-trial" id="btnTrial" onclick="openTrialModal()">🔬 Mode Trial</button>
 
-  <form onsubmit="login(event)" autocomplete="off" style="margin-top:15px;">
-    <div class="form-group"><label>🏭 Warehouse</label><select id="wh" required onchange="document.getElementById('wh-display').textContent=this.value||'Pilih WH'"><option value="">Pilih Warehouse...</option><option value="WH BGO">WH BGO</option><option value="WH CBN">WH CBN</option><option value="WH SRG">WH SRG</option><option value="WH PGS">WH PGS</option><option value="WH BIT">WH BIT</option></select></div>
-    <div class="form-group"><label>👤 Nama Lengkap</label><input type="text" id="nama" required placeholder="Masukkan nama lengkap"></div>
-    <div class="form-group"><label>💼 Role / Posisi</label><select id="role" required><option value="">Pilih Role...</option><option value="Checker Outbound">Checker Outbound</option><option value="Picker/Sorter">Picker/Sorter</option><option value="Loader">Loader</option><option value="Helper">Helper</option></select></div>
-    <div class="form-group"><label>🔑 Staff ID</label><input type="password" id="staffId" required placeholder="Masukkan Staff ID" minlength="4"><small>Minimal 4 karakter</small></div>
-    <div class="form-group"><label>📍 Pilih Packing Line</label><select id="line" required><option value="">Pilih Line...</option></select></div>
-    <button type="submit">🔓 MASUK / LOGIN</button>
-  </form>
+  <!-- ===== TABS ===== -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('staff')">👤 STAFF</div>
+    <div class="tab" onclick="switchTab('ojt')">🎓 OJT/DW</div>
+    <div class="tab" onclick="switchTab('active-session')">📋 SESI AKTIF</div>
+  </div>
+
+  <!-- ===== TAB STAFF ===== -->
+  <div id="staff-tab" class="tab-content active">
+    <form onsubmit="loginStaff(event)" autocomplete="off">
+      <div class="form-group"><label>🏭 Warehouse</label><select id="staff-wh" required onchange="document.getElementById('wh-display').textContent=this.value||'Pilih WH'"><option value="">Pilih Warehouse...</option><option value="WH BGO">WH BGO</option><option value="WH CBN">WH CBN</option><option value="WH SRG">WH SRG</option><option value="WH PGS">WH PGS</option><option value="WH BIT">WH BIT</option></select></div>
+      <div class="form-group"><label>👤 Nama Lengkap</label><input type="text" id="staff-nama" required placeholder="Masukkan nama lengkap"></div>
+      <div class="form-group"><label>💼 Role / Posisi</label><select id="staff-role" required><option value="">Pilih Role...</option><option value="Checker Outbound">Checker Outbound</option><option value="Picker/Sorter">Picker/Sorter</option><option value="Loader">Loader</option><option value="Helper">Helper</option></select></div>
+      <div class="form-group"><label>🔑 Staff ID</label><input type="password" id="staff-id" required placeholder="Masukkan Staff ID" minlength="4"><small>Minimal 4 karakter</small></div>
+      <div class="form-group"><label>📍 Pilih Packing Line</label><select id="staff-line" required><option value="">Pilih Line...</option></select></div>
+      <button type="submit">🔓 MASUK / LOGIN</button>
+    </form>
+  </div>
+
+  <!-- ===== TAB OJT/DW ===== -->
+  <div id="ojt-tab" class="tab-content">
+    <form onsubmit="loginOJTDW(event)" autocomplete="off">
+      <div class="form-group"><label>📋 Status</label><select id="ojt-status" required><option value="">Pilih Status...</option><option value="On Job Training">🎓 On Job Training</option><option value="Daily Worker">💼 Daily Worker</option></select></div>
+      <div class="form-group"><label>🏭 Warehouse</label><select id="ojt-wh" required onchange="loadTeamLeaders();document.getElementById('wh-display').textContent=this.value||'Pilih WH'"><option value="">Pilih Warehouse...</option><option value="WH BGO">WH BGO</option><option value="WH CBN">WH CBN</option><option value="WH SRG">WH SRG</option><option value="WH PGS">WH PGS</option><option value="WH BIT">WH BIT</option></select></div>
+      <div class="form-group"><label>👤 Nama Lengkap</label><input type="text" id="ojt-nama" required placeholder="Masukkan nama lengkap"></div>
+      <div class="form-group"><label>💼 Role / Posisi</label><input type="text" id="ojt-role" required placeholder="Contoh: OJT Operator / DW Helper"></div>
+      <div class="form-group"><label>🎫 Kode (dari Team Leader)</label><input type="text" id="ojt-code" required placeholder="Masukkan kode dari TL"><small>⚠️ Wajib!</small><button type="button" class="btn-request" onclick="requestCodeToTL()">📩 Request Kode ke TL</button><div class="code-display" id="code-display"></div></div>
+      <div class="form-group"><label>👨‍💼 Nama Team Leader</label><select id="ojt-tl" required><option value="">Pilih TL...</option></select></div>
+      <div class="form-group"><label>📍 Pilih Packing Line</label><select id="ojt-line" required><option value="">Pilih Line...</option></select></div>
+      <button type="submit">🔓 MASUK / LOGIN</button>
+    </form>
+  </div>
+
+  <!-- ===== TAB SESI AKTIF ===== -->
+  <div id="active-session-tab" class="tab-content">
+    <div id="active-session-info"><p style="text-align:center;color:#999;padding:20px;">Tidak ada sesi aktif</p></div>
+  </div>
+
   <div id="message" class="message"></div>
 </div>
 
 <script>
+  // ============ KONFIGURASI ============
   var TRIAL_PASSWORD = 'trial123';
   var ALLOWED_USERS = ['Sugianto', 'Admin', 'Test'];
   var API_URL = 'https://script.google.com/macros/s/AKfycbwvQNFe9PVrXnh1rP-s41VWKO-KcLO-NfC-bPdabMbr5V1AvgwEnEizfkiQQPOmy0ug/exec';
+  // ============================================
+
+  var currentSession = null;
   var isTrial = false;
   var isNewMode = false;
+  var codeCheckInterval = null;
 
+  // ============ FUNGSI UTAMA ============
   function updateClock() {
     document.getElementById('time-display').textContent = new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) + ' | ' + new Date().toLocaleTimeString('id-ID');
   }
@@ -109,10 +172,265 @@
   function initPackingLines() {
     var o='';
     for(var i=1;i<=22;i++) o+='<option value="'+i+'">Packing Line '+i+'</option>';
-    document.getElementById('line').innerHTML='<option value="">Pilih Line...</option>'+o;
+    document.getElementById('staff-line').innerHTML='<option value="">Pilih Line...</option>'+o;
+    document.getElementById('ojt-line').innerHTML='<option value="">Pilih Line...</option>'+o;
   }
   initPackingLines();
 
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+    document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active')});
+    if(tab==='staff'){
+      document.querySelectorAll('.tab')[0].classList.add('active');
+      document.getElementById('staff-tab').classList.add('active');
+    } else if(tab==='ojt'){
+      document.querySelectorAll('.tab')[1].classList.add('active');
+      document.getElementById('ojt-tab').classList.add('active');
+      loadTeamLeaders();
+    } else if(tab==='active-session'){
+      document.querySelectorAll('.tab')[2].classList.add('active');
+      document.getElementById('active-session-tab').classList.add('active');
+      updateActiveSessionDisplay();
+    }
+  }
+
+  // ============ TEAM LEADERS ============
+  function loadTeamLeaders() {
+    var selWH = document.getElementById('ojt-wh').value;
+    var s=document.getElementById('ojt-tl');
+    if(!selWH){ s.innerHTML='<option value="">Pilih Warehouse dulu...</option>'; return; }
+    fetch(API_URL+'?action=getTeamLeaders&wh='+encodeURIComponent(selWH))
+      .then(function(r){return r.json()})
+      .then(function(data){
+        s.innerHTML='<option value="">Pilih Team Leader...</option>';
+        if(Array.isArray(data)&&data.length>0){
+          data.forEach(function(t){s.innerHTML+='<option value="'+t.name+'">'+t.name+' (Shift: '+t.shift+')</option>'});
+        } else {
+          s.innerHTML='<option value="">Tidak ada TL di WH ini</option>';
+        }
+      }).catch(function(){ s.innerHTML='<option value="">Error load TL</option>'; });
+  }
+
+  // ============ REQUEST KODE ============
+  function requestCodeToTL() {
+    var n=document.getElementById('ojt-nama').value.trim(),
+        t=document.getElementById('ojt-tl').value,
+        s=document.getElementById('ojt-status').value;
+    if(!n){alert('Isi nama!');return}
+    if(!t){alert('Pilih TL!');return}
+    if(!s){alert('Pilih status!');return}
+    var c=s==='On Job Training'?'OJT':'DW';
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=requestCode&data='+encodeURIComponent(JSON.stringify({nama:n,teamLeader:t,codeType:c}))})
+      .then(function(r){return r.json()})
+      .then(function(r){if(r.success){alert('✅ '+r.message);startCodeCheck(n,t)}else alert('❌ '+r.message)})
+      .catch(function(){alert('Gagal')})
+  }
+
+  function startCodeCheck(n,t) {
+    if(codeCheckInterval)clearInterval(codeCheckInterval);
+    var d=document.getElementById('code-display');
+    d.style.display='block';
+    d.innerHTML='⏳ Menunggu approve dari '+t+'...';
+    codeCheckInterval=setInterval(function(){
+      fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=checkMyCode&data='+encodeURIComponent(JSON.stringify({nama:n,teamLeader:t}))})
+        .then(function(r){return r.json()})
+        .then(function(r){if(r.success){clearInterval(codeCheckInterval);codeCheckInterval=null;d.innerHTML='✅ Kode: <strong>'+r.code+'</strong>';document.getElementById('ojt-code').value=r.code;setTimeout(function(){d.style.display='none'},10000)}})
+        .catch(function(){})
+    },10000)
+  }
+
+  // ============ SESSION ============
+  function saveSession() {
+    if(currentSession) {
+      localStorage.setItem('packingSession', JSON.stringify({
+        id: currentSession.id,
+        nama: currentSession.nama,
+        line: currentSession.line,
+        type: currentSession.type,
+        teamLeader: currentSession.teamLeader || null,
+        loginTime: currentSession.loginTime.toISOString()
+      }));
+    }
+  }
+
+  function clearSavedSession() {
+    localStorage.removeItem('packingSession');
+  }
+
+  function checkSavedSession() {
+    var s = localStorage.getItem('packingSession');
+    if (s) {
+      try {
+        var p = JSON.parse(s);
+        currentSession = p;
+        currentSession.loginTime = new Date(p.loginTime);
+        updateActiveSessionDisplay();
+        switchTab('active-session');
+        return true;
+      } catch(e) {
+        localStorage.removeItem('packingSession');
+      }
+    }
+    return false;
+  }
+
+  // ============ LOGIN STAFF ============
+  function loginStaff(e) {
+    e.preventDefault();
+    var n=document.getElementById('staff-nama').value.trim(),
+        r=document.getElementById('staff-role').value,
+        i=document.getElementById('staff-id').value.trim(),
+        l=document.getElementById('staff-line').value,
+        w=document.getElementById('staff-wh').value;
+
+    if(!n||!r||!i||!l||!w){showMessage('Semua field harus diisi!','error');return}
+    if(i.length<4){showMessage('Staff ID minimal 4 karakter!','error');return}
+    if (isTrial && !isUserAllowed(n)) {
+      showMessage('⛔ Akses ditolak! Nama "' + n + '" tidak terdaftar di trial mode.', 'error');
+      return;
+    }
+
+    showMessage('Memproses...','info');
+
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=loginStaff&data='+encodeURIComponent(JSON.stringify({nama:n,role:r,staffId:i,packingLine:l,wh:w}))
+    })
+    .then(function(r){return r.json()})
+    .then(function(r){
+      if(r.success){
+        currentSession={id:r.sessionId,nama:n,line:l,type:'Staff',loginTime:new Date()};
+        saveSession();
+
+        if (isTrial && isNewMode) {
+          showMessage('✅ Login berhasil! Membuka browser...', 'success');
+          e.target.reset();
+          document.getElementById('wh-display').textContent = 'Pilih WH';
+          setTimeout(function(){
+            var baseUrl = window.location.href.split('?')[0];
+            var mainUrl = baseUrl.replace('login.html', 'packing.html');
+            if (mainUrl === baseUrl) {
+              mainUrl = baseUrl.replace(/\/[^/]*$/, '/packing.html');
+            }
+            var params = new URLSearchParams();
+            params.set('sessionId', r.sessionId);
+            params.set('nama', n);
+            params.set('line', l);
+            params.set('type', 'Staff');
+            params.set('loginTime', new Date().toISOString());
+            var popupUrl = mainUrl + '?' + params.toString();
+            window.open(popupUrl, '_blank');
+          }, 500);
+          return;
+        }
+
+        showMessage(r.message,'success');
+        updateActiveSessionDisplay();
+        switchTab('active-session');
+        e.target.reset();
+        saveSession();
+      } else {
+        showMessage(r.message,'error');
+      }
+    }).catch(function(e){showMessage('Gagal: '+e.message,'error')})
+  }
+
+  // ============ LOGIN OJT/DW ============
+  function loginOJTDW(e) {
+    e.preventDefault();
+    var s=document.getElementById('ojt-status').value,
+        n=document.getElementById('ojt-nama').value.trim(),
+        r=document.getElementById('ojt-role').value.trim(),
+        c=document.getElementById('ojt-code').value.trim(),
+        t=document.getElementById('ojt-tl').value,
+        l=document.getElementById('ojt-line').value,
+        w=document.getElementById('ojt-wh').value;
+
+    if(!s||!n||!r||!c||!t||!l||!w){showMessage('Semua field harus diisi!','error');return}
+    if (isTrial && !isUserAllowed(n)) {
+      showMessage('⛔ Akses ditolak! Nama "' + n + '" tidak terdaftar di trial mode.', 'error');
+      return;
+    }
+
+    showMessage('Memproses...','info');
+
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=loginOJTDW&data='+encodeURIComponent(JSON.stringify({nama:n,role:r,ojtCode:c,teamLeader:t,statusOJT:s,packingLine:l,wh:w}))
+    })
+    .then(function(r){return r.json()})
+    .then(function(r){
+      if(r.success){
+        currentSession={id:r.sessionId,nama:n,line:l,type:s,teamLeader:t,loginTime:new Date()};
+        saveSession();
+
+        if (isTrial && isNewMode) {
+          showMessage('✅ Login berhasil! Membuka browser...', 'success');
+          e.target.reset();
+          document.getElementById('wh-display').textContent = 'Pilih WH';
+          if(codeCheckInterval){clearInterval(codeCheckInterval);codeCheckInterval=null}
+          document.getElementById('code-display').style.display='none';
+          setTimeout(function(){
+            var baseUrl = window.location.href.split('?')[0];
+            var mainUrl = baseUrl.replace('login.html', 'packing.html');
+            if (mainUrl === baseUrl) {
+              mainUrl = baseUrl.replace(/\/[^/]*$/, '/packing.html');
+            }
+            var params = new URLSearchParams();
+            params.set('sessionId', r.sessionId);
+            params.set('nama', n);
+            params.set('line', l);
+            params.set('type', s);
+            params.set('teamLeader', t);
+            params.set('loginTime', new Date().toISOString());
+            var popupUrl = mainUrl + '?' + params.toString();
+            window.open(popupUrl, '_blank');
+          }, 500);
+          return;
+        }
+
+        showMessage(r.message,'success');
+        updateActiveSessionDisplay();
+        switchTab('active-session');
+        e.target.reset();
+        saveSession();
+        if(codeCheckInterval){clearInterval(codeCheckInterval);codeCheckInterval=null}
+        document.getElementById('code-display').style.display='none';
+      } else {
+        showMessage(r.message,'error');
+      }
+    }).catch(function(e){showMessage('Gagal: '+e.message,'error')})
+  }
+
+  // ============ UPDATE DISPLAY ============
+  function updateActiveSessionDisplay() {
+    var c = document.getElementById('active-session-info');
+    if(!currentSession){
+      c.innerHTML = '<p style="text-align:center;color:#999;padding:20px;">Tidak ada sesi aktif</p>';
+      return;
+    }
+    var d = Math.floor((new Date() - currentSession.loginTime) / 1000);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor((d % 3600) / 60);
+    var s = d % 60;
+    var timer = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+    c.innerHTML = '<div class="session-card">' +
+      '<h3 style="color:#1a73e8;text-align:center;">✅ SESI AKTIF</h3>' +
+      '<div style="text-align:center;font-size:44px;font-weight:700;">' + timer + '</div>' +
+      '<p><strong>👤 Nama:</strong> ' + currentSession.nama + '</p>' +
+      '<p><strong>🏭 Line:</strong> ' + currentSession.line + '</p>' +
+      '<p><strong>📌 Tipe:</strong> ' + currentSession.type + '</p>' +
+      (currentSession.teamLeader ? '<p><strong>👨‍💼 TL:</strong> ' + currentSession.teamLeader + '</p>' : '') +
+      '<p><small>🕐 Login: ' + currentSession.loginTime.toLocaleString('id-ID') + '</small></p>' +
+      '<div class="session-id-display">🆔 Session ID: ' + currentSession.id + '</div>' +
+      '<button onclick="checkSessionManually()" class="btn-check-session">🔍 CEK SESSION MANUAL</button>' +
+      '<button onclick="performLogout()" class="btn-danger" style="margin-top:10px;width:100%;font-size:17px;">🔒 LOGOUT / AKHIRI SESI</button>' +
+      '</div>';
+  }
+
+  // ============ TRIAL ============
   function openTrialModal() {
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('trialPassword').value = '';
@@ -178,85 +496,332 @@
     return false;
   }
 
-  function login(e) {
-    e.preventDefault();
-    var nama = document.getElementById('nama').value.trim();
-    var role = document.getElementById('role').value;
-    var staffId = document.getElementById('staffId').value.trim();
-    var line = document.getElementById('line').value;
-    var wh = document.getElementById('wh').value;
-
-    if (!nama || !role || !staffId || !line || !wh) {
-      showMessage('Semua field harus diisi!', 'error');
+  // ============ CEK SESSION ============
+  function checkSessionManually() {
+    if(!currentSession) {
+      alert('Tidak ada session aktif');
       return;
     }
-    if (staffId.length < 4) {
-      showMessage('Staff ID minimal 4 karakter!', 'error');
-      return;
-    }
-    if (isTrial && !isUserAllowed(nama)) {
-      showMessage('⛔ Akses ditolak! Nama "' + nama + '" tidak terdaftar di trial.', 'error');
-      return;
-    }
-
-    showMessage('Memproses...', 'info');
-
-    fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'action=loginStaff&data=' + encodeURIComponent(JSON.stringify({ nama: nama, role: role, staffId: staffId, packingLine: line, wh: wh }))
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(r) {
-      if (r.success) {
-        showMessage('✅ Login berhasil!', 'success');
-
-        var sessionData = {
-          id: r.sessionId,
-          nama: nama,
-          line: line,
-          type: 'Staff',
-          loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('packingSession', JSON.stringify(sessionData));
-
-        var baseUrl = window.location.href.split('?')[0];
-        var mainUrl = baseUrl.replace('login.html', 'packing.html');
-        if (mainUrl === baseUrl) {
-          mainUrl = baseUrl.replace(/\/[^/]*$/, '/packing.html');
-        }
-
-        if (isTrial && isNewMode) {
-          var params = new URLSearchParams();
-          params.set('sessionId', r.sessionId);
-          params.set('nama', nama);
-          params.set('line', line);
-          params.set('type', 'Staff');
-          params.set('loginTime', new Date().toISOString());
-          var popupUrl = mainUrl + '?' + params.toString();
-          window.open(popupUrl, '_blank');
-        } else {
-          window.location.href = mainUrl;
-        }
-
-        document.querySelector('form').reset();
-        document.getElementById('wh-display').textContent = 'Pilih WH';
+    showMessage('🔍 Mengecek session...', 'info');
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=getDashboard&data='+encodeURIComponent(JSON.stringify({}))})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var all = [];
+      if(d && d.activeStaff) { if(Array.isArray(d.activeStaff)) all = all.concat(d.activeStaff); }
+      if(d && d.activeOJT) { if(Array.isArray(d.activeOJT)) all = all.concat(d.activeOJT); }
+      if(d && d.activeDW) { if(Array.isArray(d.activeDW)) all = all.concat(d.activeDW); }
+      var found = false;
+      for(var i=0;i<all.length;i++){
+        var serverId = all[i].row || all[i].sessionId || all[i].id || '';
+        if(String(serverId) === String(currentSession.id)){ found = true; break; }
+      }
+      if(found) {
+        alert('✅ Session masih aktif di server!\n\nSession ID: ' + currentSession.id);
+      } else if(all.length > 0) {
+        alert('⚠️ Sesi anda TIDAK DITEMUKAN di server!\nAnda mungkin sudah di-force logout oleh Team Leader.');
+        clearSavedSession();
+        currentSession = null;
+        updateActiveSessionDisplay();
+        switchTab('staff');
+        showMessage('⚠️ Sesi telah diakhiri oleh Team Leader.', 'warning');
       } else {
-        showMessage(r.message, 'error');
+        alert('⚠️ Tidak bisa mengecek session (data server kosong)');
       }
     })
-    .catch(function(e) {
-      showMessage('Gagal: ' + e.message, 'error');
+    .catch(function(e){ alert('❌ Gagal cek session: ' + e.message); });
+  }
+
+  // ============ LOGOUT ============
+  function performLogout() {
+    if (!currentSession || !confirm('Yakin ingin logout?')) return;
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=logout&data='+encodeURIComponent(JSON.stringify({sessionId:currentSession.id}))})
+    .then(function(r){return r.json()})
+    .then(function(r){
+      if(r.success){
+        showMessage(r.message,'success');
+        clearSavedSession();
+        currentSession = null;
+        updateActiveSessionDisplay();
+        setTimeout(function(){switchTab('staff')},2000);
+        document.querySelectorAll('form').forEach(function(f){ f.reset(); });
+        document.getElementById('wh-display').textContent = 'Pilih WH';
+      } WH';
+      } else {
+        showMessage(r.message,' else {
+        showMessage(r.message,'error');
+      }
+error');
+      }
+    })
+  }
+
+  // ============ DASHBOARD ============
+  function    })
+  }
+
+  // ============ DASHBOARD ============
+  function showDashboard() {
+ showDashboard() {
+    var tl = prompt('    var tl = prompt('👨‍💼 Nama Team Leader:');
+    var👨‍💼 Nama Team Leader:');
+    var pw = prompt('🔑 Password:');
+    if(! pw = prompt('🔑 Password:');
+    if(!tl||!pw) return;
+tl||!pw) return;
+    fetch(API_URL,{method:'POST',    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=verifyTL&dataheaders:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=verifyTL&data='+encodeURIComponent(JSON.stringify({tlName:tl.trim(),password:pw.trim()}))})
+    .then(function(r){return r.json()})
+    .then(function(v){
+      if(!v.success){ alert('❌ '+v.message='+encodeURIComponent(JSON.stringify({tlName:tl.trim(),password:pw.trim()}))})
+    .then(function(r){return r.json()})
+    .then(function(v){
+      if(!v.success){ alert('❌ '+v.message); return; }
+      if(!v); return; }
+      if(!v.warehouse){.warehouse){ alert('❌ TL tidak memiliki Warehouse alert('❌ TL tidak memiliki Warehouse!'); return;!'); return; }
+      localStorage.set }
+      localStorage.setItem('tlNameItem('tlName', tl.trim());
+      localStorage.setItem', tl.trim());
+      localStorage.setItem('tlPw', pw.trim());
+('tlPw', pw.trim());
+      localStorage.setItem      localStorage.setItem('tlWH',('tlWH', v.warehouse);
+      localStorage.set v.warehouseItem('openDashboard', 'true');
+      window.open();
+      localStorage.setItem('openDashboard', 'true');
+      window.open(API_URL, '_API_URL, '_blank');
+    })
+  }
+
+  functionblank');
+    })
+  }
+
+  function refreshDashboard refreshDashboardFull() {
+   Full() {
+    fetch(API_URL,{ fetch(API_URL,{method:'POST',method:'POST',headers:{'Contentheaders:{'Content-Type':'application/x-www-form-urlencoded'},body-Type':'application/x-www-form-urlencoded'},body:'action=get:'action=getDashboard&data='Dashboard&data='+encodeURIComponent+encodeURIComponent(JSON.stringify({teamLeader:current(JSON.stringify({TLName,wh:currentTLWH}))teamLeader:currentTLName,wh:currentTLWH}))})
+    .then(function(r){return r.json()})
+    .then(function})
+    .then(function(r){return r.json()})
+    .then(function(data){
+      var html = '<div style="background:#(data){
+      var html = '<div style="background:#1a73e1a73e8;color:8;color:white;padding:15px 20px;border-radius:12px;white;padding:15px 20px;border-radius:12px;margin-bottom:15px;display:flex;justifymargin-bottom:15px;display:flex;justify-content:space-between-content:space-between;align-items:;align-items:center;flex-wrapcenter;flex-wrap:wrap;">';
+      html += '<span style="font-size:20px:wrap;">';
+      html += '<span style="font-size:20px;font-weight:;font-weight:700;">👨‍💼 '+700;">👨‍💼 '+currentTLName+'currentTLName+' <span style="font-size:12 <span style="font-size:12px;">('+px;">('+currentTLWH+currentTLWH+')</span></')</span></span>';
+      html += '<span style="font-size:span>';
+      html += '<span style="font-size:12px;">Total12px;">Total: '+data.stats.totalActive+': '+data.stats.totalActive+' | Staff: '+data.stats | Staff:.totalStaff+' | '+data.stats.totalStaff+' | OJT: '+ OJT: '+data.stats.totalOJT+' |data.stats.totalOJT+' | DW: '+data.stats.totalDW+' | Kosong: '+data.st DW: '+data.stats.totalDW+' | Kosong: '+data.stats.availableLines+'</span>';
+ats.availableLines+'</span>';
+      html += '</div>';
+      if      html += '</div>';
+      if(data.pendingRequests(data.pendingRequests && data.pendingRequests.length >  && data.pending0)Requests.length > 0) {
+        html += {
+        html += '<div style=" '<div style="background:#fff3background:#fff3e0;padding:10px e0;padding15:10px px;border-radius:8px;margin-bottom:15px;font15px;border-radius:8px;margin-bottom:15px;font-weight:700;">🔔 '+data-weight:700;">.pendingRequests.length🔔 '+data.pendingRequests.length+' Request: ';
+        data.pendingRequests.forEach(function+' Request: ';
+        data.p(r){
+          htmlendingRequests.forEach(function(r){
+          html += '<button onclick="approveRequest += '<button onclick="approveRequestFull('+r.row+')"Full('+r style="background:#43a047;color:white;.row+')" style="background:#43a047;color:white;border:none;border:none;padding:5pxpadding:5px 12px; 12px;border-radius:5px;margin:border-radius:52px 4px;cursor:px;margin:2px 4px;cursor:pointer;">✅ '+pointer;">✅ '+r.nama+'r.nama+' ('+r.codeType+')</ ('+r.codeType+')</button>';
+        });
+button>';
+        });
+        html += '</div>';
+      }
+      if        html += '</(data.tabRequestsdiv>';
+      }
+      if(data.tabRequests && data.tab && data.tabRequests.length > 0) {
+       Requests.length > 0) {
+        html += '<div style="background:# html += '<div style="background:#fff3e0fff3e0;padding:10px 15px;border-radius:;padding:10px 15px;border-radius:8px;margin-bottom:15px8px;margin-bottom:15px;font-weight:700;">📩 '+data.tab;font-weight:700;">📩 '+data.tabRequests.length+' Request Tab Baru: ';
+        data.tRequests.length+' Request Tab Baru: ';
+        data.tabRequests.forEach(function(r){
+          html += '<button onclickabRequests.forEach(function(r){
+          html += '<button onclick="approveTabRequestFull('+r.row+',="approveTabRequestFull('+r.row+',\''+r.sessionId+'\')" style="background:#43a\''+r.sessionId+'\')" style="background:#43a047;color:047;color:white;border:none;padding:5px 12px;border-radiuswhite;border:none;padding:5px 12px;border-radius:5px;:5px;margin:2pxmargin:2px 4px; 4px;cursor:pointer;">✅ '+r.ncursor:pointer;">ama+' (L'+r.line+')</button>';
+✅ '+r.nama+' (L'+r.line+')</button>';
+        });
+        html        });
+        html += '</div>';
+ += '</div>';
+      }
+      html      }
+      html += '<div style += '<div style="display:grid;grid-template-column="display:grids:repeat(11,1fr);gap:8;grid-template-columns:repeat(11,1fr);gap:8px;">';
+      data.allPackingLines.forEach(function(l){
+        var bg = l.status === 'Occupied' ? '#ffpx;">';
+      data.allPackingLines.forEach(function(l){
+        var bg = l.status === 'Occupied' ? '#ffebee' : '#e8febee' : '#e8f5e9';
+5e9';
+        var border = l.status === 'Occupied' ? '#ef5350' : '#66bb6a';
+        var color = l.status === '        var border = l.status === 'Occupied' ? '#ef5350' : '#66bb6a';
+        var color = l.status === 'Occupied' ? '#c62828Occupied' ?' : '#2e7d32';
+        html += '#c62828' : '#2e7d32';
+        html += '<div style '<div style="background:'+bg+';border:2px solid '+="background:'+bg+';border:2px solid '+border+';paddingborder+';padding:10px :10px 5px;text5px;text-align:center;border-radius:8px;font-weight-align:center;border-radius:8px;font-weight:700;color:700;color:'+color+';min-height::'+color+';min-height:85px;">';
+        html +=85px;">';
+ '<div style="font-size:16px;">L'+l        html += '<div style="font-size:16px.line+'</div;">L'+l.line+'</div>';
+        if(l>';
+        if(l.status === 'Occup.status === 'Occupied') {
+          html += '<divied') {
+          style="font-size:10px;margin:4px html += '<div style="font-size:10px; 0;">'+l.user+'</margin:4px 0;">'+div>';
+          html += '<div stylel.user+'</div>';
+          html += '<div style="font-size:="font-size:10px;background10px;background:rgba(0,0,:rgba(0,0,0,0.0,0.1);padding:2px 61);padding:2px 6px;border-radius:4px;display:inline-blockpx;border-radius:4px;display:inline-block;">⏱️ '+l.duration+'</div;">⏱️ '+l.duration+'</div>';
+          html +=>';
+          html += '<br><button '<br><button onclick="forceLog onclick="forceLogoutDirect('+l.line+')" style="backgroundoutDirect('+l.line+')" style="background:#e53935;color:white;border:n:#e53935;color:one;padding:white;border:none;padding:3px 83px 8px;border-radiuspx;border-radius:4px;:4px;cursor:pointer;font-size:9cursor:pointer;font-size:9px;margin-top:4px;">✕ Force</px;margin-top:4px;">button>';
+        }✕ Force</button>';
+        } else {
+          html else {
+          html += '<div style += '<div style="font-size:="font-size:10px;margin-top:10px10px;margin-top:10px;">Kosong;">Kosong</div>';
+        }
+        html +=</div>';
+        '</div>';
+      });
+      html += }
+        html += '</div>';
+      });
+      html += '</div>';
+      html += '<div '</div>';
+      style="margin-top:15px; html += '<div style="margin-top:15px;text-align:center;"><button onclick="text-align:center;"><button onclick="generateCodeFull()" style="background:#43a047;color:generateCodeFull()" style="background:#43a047;color:white;border:nwhite;border:none;padding:one;padding:10px 25px;border-radius:8px;10px 25px;border-radius:8px;cursor:pointer;cursor:pointer;font-weight:700;font-size:font-weight:700;font-size:14px;">14px;">🎫 Generate Kode</button></div🎫 Generate Kode</button></div>';
+      document.getElementById('dash-full').innerHTML =>';
+      document.getElementById('dash-full').innerHTML = html;
+    });
+ html;
     });
   }
 
-  function showMessage(tx, tp) {
-    var m = document.getElementById('message');
-    m.textContent = tx;
-    m.className = 'message ' + tp;
-    clearTimeout(m._t);
-    m._t = setTimeout(function() { m.className = 'message'; }, 5000);
+  function  }
+
+  function approveRequestFull(rowId) {
+ approveRequestFull(rowId) {
+    fetch(API    fetch(API_URL,{method_URL,{method:'POST',headers:{'Content-Type:'POST',headers:{'Content-Type':'':'application/x-www-form-urlencoded'application/x-www},body:'action-form-urlencoded'},body:'action=approveRequest=approveRequest&data='+&data='+encodeURIComponent(JSON.stringify({rowencodeURIComponent(JSON.stringify({rowId:rowId,teamLeaderId:rowId,teamLeader:currentTLName:currentTLName}))}))})
+})
+    .then(function(){    refreshDashboardFull .then(function(){ refreshDashboardFull(); });
   }
+
+(); });
+  }
+
+  function approveTabRequestFull(rowId  function approveTabRequestFull(rowId, sessionId) {
+    if(!, sessionId)confirm('✅ {
+    if(!confirm('✅ Approve request tab Approve request tab baru ini?')) baru ini?')) return;
+    fetch(API_URL, return;
+    fetch(API_URL,{method:'POST{method:'POST',headers:{'Content-Type':'application',headers:{'/x-www-form-urlencoded'},body:'action=Content-Type':'application/x-www-form-urlencoded'},body:'action=approveTabRequestapproveTabRequest&data='+&data='+encodeURIComponent(JSON.stringify({rowId:rowIdencodeURIComponent(JSON.stringify({rowId:rowId, sessionId:, sessionId:sessionId, teamsessionId, teamLeader:currentTLLeader:currentTLName}))Name}))})
+    .then})
+    .then(function(r){return r.json()})
+    .then(function(r){ if(r.success){ alert('✅ '+(function(r){return r.json()})
+    .then(function(r){ if(r.success){ alert('✅ '+r.message); refreshr.message); refreshDashboardFull(); }DashboardFull(); } else { alert else { alert('❌ Gagal: '+r.message); } });
+('❌ Gagal: '+r.message); } });
+  }
+
+  function  }
+
+  function generateCodeFull() {
+    var generateCodeFull() {
+    var t = prompt(' t = prompt('Ketik: OKetik: OJT atau DW');
+JT atau DW');
+    if(!t || (t !==    if(!t || (t !== 'OJT' 'OJT' && t !== ' && t !== 'DW')) return;
+    fetch(APIDW')) return;
+    fetch(API_URL,{method:'POST',headers_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=generateCode'},body:'action=generateCode&data='+encodeURIComponent(&data='+encodeURIComponent(JSON.stringify({teamLeader:currentTLJSON.stringify({teamLeader:currentTLName,codeType:t}))})
+Name,codeType:t}))})
+       .then(function(r){return r.json()})
+    .then(function(r){return r.json()})
+    .then(function(r .then(function(r){ if(r.success){ navigator.cl){ if(r.success){ navigator.clipboard.writeTextipboard.writeText(r.code); alert('✅ K(r.code); alert('✅ Kode: '+rode: '+r.code+'\n\n📋 Sud.code+'\n\n📋 Sudah di-copyah di-copy!'); } else { alert('!'); } else { alert('❌ '+r.message❌ '+r.message); } });
+ ); } });
+  }
+
+  function forceLogoutDirect }
+
+  function forceLogoutDirect(lineNum) {
+    if(!confirm(lineNum) {
+    if(!confirm('⚠️ Force('⚠️ Force logout Line '+lineNum+' logout Line '+lineNum+'?')) return;
+    fetch(API?')) return;
+    fetch(API_URL,{method_URL,{method:'POST',headers:{'Content-Type:'POST',headers:{'Content-Type':'application/x-':'application/x-www-form-urlencoded'},body:'www-form-urlencoded'},body:'action=getDashboard&data='+encodeURIComponent(JSONaction=getDashboard&data='+encodeURIComponent(JSON.stringify({teamLeader:currentTLName.stringify({teamLeader:currentTLName,wh:currentTLWH}))})
+    .then(function(r){return r.json()})
+    .then(function(data){
+      var,wh:currentTLWH}))})
+    .then(function(r){return r.json()})
+    .then(function(data){
+      var all = []. all = [].concat(data.activeconcat(data.activeStaff||[], data.activeOJT||Staff||[], data.activeOJT||[], data.activeDW[], data.activeDW||[]);
+     ||[]);
+      var found = null;
+      for(var var found = null;
+      for(var i=0;i<all.length;i++) i=0;i<all.length;i++){ if(all[i].line == line{ if(all[i].line == lineNum){ found =Num){ found = all[i]; break; } }
+      all[i]; break; } }
+      if(!found){ if(!found){ alert('Line '+lineNum+' alert('Line '+lineNum+' tidak ditemukan!'); refreshDashboardFull(); return; }
+ tidak ditemukan!'); refreshDashboardFull(); return; }
+      fetch(API      fetch(API_URL,{method:'POST',headers_URL,{method:'POST',headers:{'Content-Type:{'Content-Type':'application/x-www-form-urlencoded':'application/x-www-form-urlencoded'},body:''},body:'action=logout&data='+encodeaction=logout&data='+encodeURIComponent(JSONURIComponent(JSON.stringify({sessionId:found.row.stringify({sessionId:found.row}))})
+}))})
+      .then(function(r){return      .then(function(r){return r.json()})
+      .then(function(res){ r.json()})
+      .then(function(res){ if(res.success){ alert('✅ Force logout berhasil! if(res.success){ alert('✅ Force logout berhasil! '+res.message); refreshDashboardFull(); } else { alert '+res.message); refreshDashboardFull(); } else { alert('❌ Gagal: '+res.message); } });
+    });
+  }
+
+  // ============ SHOW('❌ Gagal: '+res.message); } });
+    });
+  }
+
+  // ============ SHOW MESSAGE ============
+  function MESSAGE ============
+  function showMessage(t showMessage(tx, tp)x, tp) {
+    var m = document.getElementById(' {
+    var m = document.getElementById('message');
+    m.textContent = txmessage');
+    m.textContent = tx;
+    m.class;
+    m.className = 'message ' + tp;
+Name = 'message ' + tp;
+    clearTimeout(m._t);
+    m._t =    clearTimeout(m._t);
+    m._t = setTimeout(function(){ m.className = 'message'; },  setTimeout(function(){ m.className = 'message'; }, 5000);
+  }
+
+  // ============ INIT =5000);
+  }
+
+  // ============ INIT ============
+ ===========
+  window.onload = function() {
+    if (localStorage.getItem('openDashboard') === 'true') {
+      localStorage.removeItem('open window.onload = function() {
+    if (localStorage.getItem('openDashboard') === 'true') {
+      localStorage.removeItem('openDashboard');
+      document.querySelector('.container').Dashboard');
+      document.querySelector('.container').style.display = 'style.display = 'none';
+      document.querySelector('.dashboard-btnnone';
+      document.querySelector('.dashboard-btn').style.display =').style.display = 'none';
+      var tlName 'none';
+      var tlName = localStorage.getItem(' = localStorage.getItem('tlName');
+      var pw =tlName');
+      var pw = localStorage.getItem('tlPw');
+      var tlWH = localStorage.getItem('tlWH') || '';
+      if (!tlName || !pw localStorage.getItem('tlPw');
+      var tlWH = localStorage.getItem('tlWH') || '';
+      if (!tlName || !pw || !tlWH) { alert('Session expired!'); window.close(); return; }
+      fetch || !tlWH) { alert('Session expired!'); window.close(); return; }
+      fetch(API_URL(API_URL, { method: 'POST',, { method: 'POST', headers: { ' headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'action=verifyTL&data=' + encodeURIComponent(JSON.stringify({ tlName: tlName, password: pw })) })
+      .then(function(rContent-Type': 'application/x-www-form-urlencoded' }, body: 'action=verifyTL&data=' + encodeURIComponent(JSON.stringify({ tlName: tlName, password: pw })) })
+      .then(function(r) { return r.json(); })
+      .then(function(v) { return r.json(); })
+      .then(function(v) {
+        if (!v.success) { alert(') {
+        if (!v.success) { alert('❌ ' + v.message); window.close(); return; }
+        currentTLName = tlName;
+❌ ' + v.message); window.close(); return; }
+        currentTLName = tlName;
+        currentTLWH = tlWH;
+        currentTLWH = tlWH;
+        document.body.innerHTML        document.body.innerHTML = '<div id="dash-full" style="padding = '<div id="dash-full" style="padding:20px;max-width:100%;background:#f:20px;max-width:100%;background:#f5f7fa5f7fa;min-height:100vh;"></div;min-height:100vh;"></div>';
+        refreshDashboardFull();
+        set>';
+        refreshDashboardFull();
+        setInterval(function() { refreshDashboardFull(); }, 15000Interval(function() { refreshDashboardFull(); }, 15000);
+      });
+     );
+      });
+      return;
+    }
+    document.getElementById(' return;
+    }
+    document.getElementById('mainContainer').stylemainContainer').style.display = 'block';
+    check.display = 'block';
+    checkSavedSessionSavedSession();
+  };
+</script>
+</();
+  };
 </script>
 </body>
+</htmlbody>
 </html>
