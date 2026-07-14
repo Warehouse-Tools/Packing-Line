@@ -161,21 +161,20 @@
   var isTrial = false;
   var isNewMode = false;
   var codeCheckInterval = null;
+  var currentTLName = null;
+  var currentTLWH = '';
 
   // ============ FUNGSI UTAMA ============
   function updateClock() {
     document.getElementById('time-display').textContent = new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) + ' | ' + new Date().toLocaleTimeString('id-ID');
   }
-  setInterval(updateClock, 1000);
-  updateClock();
-
+  
   function initPackingLines() {
     var o='';
     for(var i=1;i<=22;i++) o+='<option value="'+i+'">Packing Line '+i+'</option>';
     document.getElementById('staff-line').innerHTML='<option value="">Pilih Line...</option>'+o;
     document.getElementById('ojt-line').innerHTML='<option value="">Pilih Line...</option>'+o;
   }
-  initPackingLines();
 
   function switchTab(tab) {
     document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
@@ -183,10 +182,12 @@
     if(tab==='staff'){
       document.querySelectorAll('.tab')[0].classList.add('active');
       document.getElementById('staff-tab').classList.add('active');
+      document.getElementById('wh-display').textContent = document.getElementById('staff-wh').value || 'Pilih WH';
     } else if(tab==='ojt'){
       document.querySelectorAll('.tab')[1].classList.add('active');
       document.getElementById('ojt-tab').classList.add('active');
       loadTeamLeaders();
+      document.getElementById('wh-display').textContent = document.getElementById('ojt-wh').value || 'Pilih WH';
     } else if(tab==='active-session'){
       document.querySelectorAll('.tab')[2].classList.add('active');
       document.getElementById('active-session-tab').classList.add('active');
@@ -545,283 +546,150 @@
         setTimeout(function(){switchTab('staff')},2000);
         document.querySelectorAll('form').forEach(function(f){ f.reset(); });
         document.getElementById('wh-display').textContent = 'Pilih WH';
-      } WH';
       } else {
-        showMessage(r.message,' else {
         showMessage(r.message,'error');
       }
-error');
-      }
     })
-  }
-
-  // ============ DASHBOARD ============
-  function    })
   }
 
   // ============ DASHBOARD ============
   function showDashboard() {
- showDashboard() {
-    var tl = prompt('    var tl = prompt('👨‍💼 Nama Team Leader:');
-    var👨‍💼 Nama Team Leader:');
+    var tl = prompt('👨‍💼 Nama Team Leader:');
     var pw = prompt('🔑 Password:');
-    if(! pw = prompt('🔑 Password:');
     if(!tl||!pw) return;
-tl||!pw) return;
-    fetch(API_URL,{method:'POST',    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=verifyTL&dataheaders:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=verifyTL&data='+encodeURIComponent(JSON.stringify({tlName:tl.trim(),password:pw.trim()}))})
-    .then(function(r){return r.json()})
-    .then(function(v){
-      if(!v.success){ alert('❌ '+v.message='+encodeURIComponent(JSON.stringify({tlName:tl.trim(),password:pw.trim()}))})
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=verifyTL&data='+encodeURIComponent(JSON.stringify({tlName:tl.trim(),password:pw.trim()}))})
     .then(function(r){return r.json()})
     .then(function(v){
       if(!v.success){ alert('❌ '+v.message); return; }
-      if(!v); return; }
-      if(!v.warehouse){.warehouse){ alert('❌ TL tidak memiliki Warehouse alert('❌ TL tidak memiliki Warehouse!'); return;!'); return; }
-      localStorage.set }
-      localStorage.setItem('tlNameItem('tlName', tl.trim());
-      localStorage.setItem', tl.trim());
+      if(!v.warehouse){ alert('❌ TL tidak memiliki Warehouse!'); return; }
+      localStorage.setItem('tlName', tl.trim());
       localStorage.setItem('tlPw', pw.trim());
-('tlPw', pw.trim());
-      localStorage.setItem      localStorage.setItem('tlWH',('tlWH', v.warehouse);
-      localStorage.set v.warehouseItem('openDashboard', 'true');
-      window.open();
+      localStorage.setItem('tlWH', v.warehouse);
       localStorage.setItem('openDashboard', 'true');
-      window.open(API_URL, '_API_URL, '_blank');
+      window.open(API_URL, '_blank');
     })
   }
 
-  functionblank');
-    })
-  }
-
-  function refreshDashboard refreshDashboardFull() {
-   Full() {
-    fetch(API_URL,{ fetch(API_URL,{method:'POST',method:'POST',headers:{'Contentheaders:{'Content-Type':'application/x-www-form-urlencoded'},body-Type':'application/x-www-form-urlencoded'},body:'action=get:'action=getDashboard&data='Dashboard&data='+encodeURIComponent+encodeURIComponent(JSON.stringify({teamLeader:current(JSON.stringify({TLName,wh:currentTLWH}))teamLeader:currentTLName,wh:currentTLWH}))})
-    .then(function(r){return r.json()})
-    .then(function})
+  function refreshDashboardFull() {
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=getDashboard&data='+encodeURIComponent(JSON.stringify({teamLeader:currentTLName,wh:currentTLWH}))})
     .then(function(r){return r.json()})
     .then(function(data){
-      var html = '<div style="background:#(data){
-      var html = '<div style="background:#1a73e1a73e8;color:8;color:white;padding:15px 20px;border-radius:12px;white;padding:15px 20px;border-radius:12px;margin-bottom:15px;display:flex;justifymargin-bottom:15px;display:flex;justify-content:space-between-content:space-between;align-items:;align-items:center;flex-wrapcenter;flex-wrap:wrap;">';
-      html += '<span style="font-size:20px:wrap;">';
-      html += '<span style="font-size:20px;font-weight:;font-weight:700;">👨‍💼 '+700;">👨‍💼 '+currentTLName+'currentTLName+' <span style="font-size:12 <span style="font-size:12px;">('+px;">('+currentTLWH+currentTLWH+')</span></')</span></span>';
-      html += '<span style="font-size:span>';
-      html += '<span style="font-size:12px;">Total12px;">Total: '+data.stats.totalActive+': '+data.stats.totalActive+' | Staff: '+data.stats | Staff:.totalStaff+' | '+data.stats.totalStaff+' | OJT: '+ OJT: '+data.stats.totalOJT+' |data.stats.totalOJT+' | DW: '+data.stats.totalDW+' | Kosong: '+data.st DW: '+data.stats.totalDW+' | Kosong: '+data.stats.availableLines+'</span>';
-ats.availableLines+'</span>';
+      var html = '<div style="background:#1a73e8;color:white;padding:15px 20px;border-radius:12px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">';
+      html += '<span style="font-size:20px;font-weight:700;">👨‍💼 '+currentTLName+' <span style="font-size:12px;">('+currentTLWH+')</span></span>';
+      html += '<span style="font-size:12px;">Total: '+data.stats.totalActive+' | Staff: '+data.stats.totalStaff+' | OJT: '+data.stats.totalOJT+' | DW: '+data.stats.totalDW+' | Kosong: '+data.stats.availableLines+'</span>';
       html += '</div>';
-      if      html += '</div>';
-      if(data.pendingRequests(data.pendingRequests && data.pendingRequests.length >  && data.pending0)Requests.length > 0) {
-        html += {
-        html += '<div style=" '<div style="background:#fff3background:#fff3e0;padding:10px e0;padding15:10px px;border-radius:8px;margin-bottom:15px;font15px;border-radius:8px;margin-bottom:15px;font-weight:700;">🔔 '+data-weight:700;">.pendingRequests.length🔔 '+data.pendingRequests.length+' Request: ';
-        data.pendingRequests.forEach(function+' Request: ';
-        data.p(r){
-          htmlendingRequests.forEach(function(r){
-          html += '<button onclick="approveRequest += '<button onclick="approveRequestFull('+r.row+')"Full('+r style="background:#43a047;color:white;.row+')" style="background:#43a047;color:white;border:none;border:none;padding:5pxpadding:5px 12px; 12px;border-radius:5px;margin:border-radius:52px 4px;cursor:px;margin:2px 4px;cursor:pointer;">✅ '+pointer;">✅ '+r.nama+'r.nama+' ('+r.codeType+')</ ('+r.codeType+')</button>';
-        });
-button>';
+      if(data.pendingRequests && data.pendingRequests.length > 0) {
+        html += '<div style="background:#fff3e0;padding:10px 15px;border-radius:8px;margin-bottom:15px;font-weight:700;">🔔 '+data.pendingRequests.length+' Request: ';
+        data.pendingRequests.forEach(function(r){
+          html += '<button onclick="approveRequestFull('+r.row+')" style="background:#43a047;color:white;border:none;padding:5px 12px;border-radius:5px;margin:2px 4px;cursor:pointer;">✅ '+r.nama+' ('+r.codeType+')</button>';
         });
         html += '</div>';
       }
-      if        html += '</(data.tabRequestsdiv>';
-      }
-      if(data.tabRequests && data.tab && data.tabRequests.length > 0) {
-       Requests.length > 0) {
-        html += '<div style="background:# html += '<div style="background:#fff3e0fff3e0;padding:10px 15px;border-radius:;padding:10px 15px;border-radius:8px;margin-bottom:15px8px;margin-bottom:15px;font-weight:700;">📩 '+data.tab;font-weight:700;">📩 '+data.tabRequests.length+' Request Tab Baru: ';
-        data.tRequests.length+' Request Tab Baru: ';
+      if(data.tabRequests && data.tabRequests.length > 0) {
+        html += '<div style="background:#fff3e0;padding:10px 15px;border-radius:8px;margin-bottom:15px;font-weight:700;">📩 '+data.tabRequests.length+' Request Tab Baru: ';
         data.tabRequests.forEach(function(r){
-          html += '<button onclickabRequests.forEach(function(r){
-          html += '<button onclick="approveTabRequestFull('+r.row+',="approveTabRequestFull('+r.row+',\''+r.sessionId+'\')" style="background:#43a\''+r.sessionId+'\')" style="background:#43a047;color:047;color:white;border:none;padding:5px 12px;border-radiuswhite;border:none;padding:5px 12px;border-radius:5px;:5px;margin:2pxmargin:2px 4px; 4px;cursor:pointer;">✅ '+r.ncursor:pointer;">ama+' (L'+r.line+')</button>';
-✅ '+r.nama+' (L'+r.line+')</button>';
+          html += '<button onclick="approveTabRequestFull('+r.row+',\''+r.sessionId+'\')" style="background:#43a047;color:white;border:none;padding:5px 12px;border-radius:5px;margin:2px 4px;cursor:pointer;">✅ '+r.nama+' (L'+r.line+')</button>';
         });
-        html        });
         html += '</div>';
- += '</div>';
       }
-      html      }
-      html += '<div style += '<div style="display:grid;grid-template-column="display:grids:repeat(11,1fr);gap:8;grid-template-columns:repeat(11,1fr);gap:8px;">';
+      html += '<div style="display:grid;grid-template-columns:repeat(11,1fr);gap:8px;">';
       data.allPackingLines.forEach(function(l){
-        var bg = l.status === 'Occupied' ? '#ffpx;">';
-      data.allPackingLines.forEach(function(l){
-        var bg = l.status === 'Occupied' ? '#ffebee' : '#e8febee' : '#e8f5e9';
-5e9';
+        var bg = l.status === 'Occupied' ? '#ffebee' : '#e8f5e9';
         var border = l.status === 'Occupied' ? '#ef5350' : '#66bb6a';
-        var color = l.status === '        var border = l.status === 'Occupied' ? '#ef5350' : '#66bb6a';
-        var color = l.status === 'Occupied' ? '#c62828Occupied' ?' : '#2e7d32';
-        html += '#c62828' : '#2e7d32';
-        html += '<div style '<div style="background:'+bg+';border:2px solid '+="background:'+bg+';border:2px solid '+border+';paddingborder+';padding:10px :10px 5px;text5px;text-align:center;border-radius:8px;font-weight-align:center;border-radius:8px;font-weight:700;color:700;color:'+color+';min-height::'+color+';min-height:85px;">';
-        html +=85px;">';
- '<div style="font-size:16px;">L'+l        html += '<div style="font-size:16px.line+'</div;">L'+l.line+'</div>';
-        if(l>';
-        if(l.status === 'Occup.status === 'Occupied') {
-          html += '<divied') {
-          style="font-size:10px;margin:4px html += '<div style="font-size:10px; 0;">'+l.user+'</margin:4px 0;">'+div>';
-          html += '<div stylel.user+'</div>';
-          html += '<div style="font-size:="font-size:10px;background10px;background:rgba(0,0,:rgba(0,0,0,0.0,0.1);padding:2px 61);padding:2px 6px;border-radius:4px;display:inline-blockpx;border-radius:4px;display:inline-block;">⏱️ '+l.duration+'</div;">⏱️ '+l.duration+'</div>';
-          html +=>';
-          html += '<br><button '<br><button onclick="forceLog onclick="forceLogoutDirect('+l.line+')" style="backgroundoutDirect('+l.line+')" style="background:#e53935;color:white;border:n:#e53935;color:one;padding:white;border:none;padding:3px 83px 8px;border-radiuspx;border-radius:4px;:4px;cursor:pointer;font-size:9cursor:pointer;font-size:9px;margin-top:4px;">✕ Force</px;margin-top:4px;">button>';
-        }✕ Force</button>';
+        var color = l.status === 'Occupied' ? '#c62828' : '#2e7d32';
+        html += '<div style="background:'+bg+';border:2px solid '+border+';padding:10px 5px;text-align:center;border-radius:8px;font-weight:700;color:'+color+';min-height:85px;">';
+        html += '<div style="font-size:16px;">L'+l.line+'</div>';
+        if(l.status === 'Occupied') {
+          html += '<div style="font-size:10px;margin:4px 0;">'+l.user+'</div>';
+          html += '<div style="font-size:10px;background:rgba(0,0,0,0.1);padding:2px 6px;border-radius:4px;display:inline-block;">⏱️ '+l.duration+'</div>';
+          html += '<br><button onclick="forceLogoutDirect('+l.line+')" style="background:#e53935;color:white;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:9px;margin-top:4px;">✕ Force</button>';
         } else {
-          html else {
-          html += '<div style += '<div style="font-size:="font-size:10px;margin-top:10px10px;margin-top:10px;">Kosong;">Kosong</div>';
+          html += '<div style="font-size:10px;margin-top:10px;">Kosong</div>';
         }
-        html +=</div>';
-        '</div>';
-      });
-      html += }
         html += '</div>';
       });
       html += '</div>';
-      html += '<div '</div>';
-      style="margin-top:15px; html += '<div style="margin-top:15px;text-align:center;"><button onclick="text-align:center;"><button onclick="generateCodeFull()" style="background:#43a047;color:generateCodeFull()" style="background:#43a047;color:white;border:nwhite;border:none;padding:one;padding:10px 25px;border-radius:8px;10px 25px;border-radius:8px;cursor:pointer;cursor:pointer;font-weight:700;font-size:font-weight:700;font-size:14px;">14px;">🎫 Generate Kode</button></div🎫 Generate Kode</button></div>';
-      document.getElementById('dash-full').innerHTML =>';
+      html += '<div style="margin-top:15px;text-align:center;"><button onclick="generateCodeFull()" style="background:#43a047;color:white;border:none;padding:10px 25px;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px;">🎫 Generate Kode</button></div>';
       document.getElementById('dash-full').innerHTML = html;
     });
- html;
-    });
   }
-
-  function  }
 
   function approveRequestFull(rowId) {
- approveRequestFull(rowId) {
-    fetch(API    fetch(API_URL,{method_URL,{method:'POST',headers:{'Content-Type:'POST',headers:{'Content-Type':'':'application/x-www-form-urlencoded'application/x-www},body:'action-form-urlencoded'},body:'action=approveRequest=approveRequest&data='+&data='+encodeURIComponent(JSON.stringify({rowencodeURIComponent(JSON.stringify({rowId:rowId,teamLeaderId:rowId,teamLeader:currentTLName:currentTLName}))}))})
-})
-    .then(function(){    refreshDashboardFull .then(function(){ refreshDashboardFull(); });
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=approveRequest&data='+encodeURIComponent(JSON.stringify({rowId:rowId,teamLeader:currentTLName}))})
+    .then(function(){ refreshDashboardFull(); });
   }
 
-(); });
-  }
-
-  function approveTabRequestFull(rowId  function approveTabRequestFull(rowId, sessionId) {
-    if(!, sessionId)confirm('✅ {
-    if(!confirm('✅ Approve request tab Approve request tab baru ini?')) baru ini?')) return;
-    fetch(API_URL, return;
-    fetch(API_URL,{method:'POST{method:'POST',headers:{'Content-Type':'application',headers:{'/x-www-form-urlencoded'},body:'action=Content-Type':'application/x-www-form-urlencoded'},body:'action=approveTabRequestapproveTabRequest&data='+&data='+encodeURIComponent(JSON.stringify({rowId:rowIdencodeURIComponent(JSON.stringify({rowId:rowId, sessionId:, sessionId:sessionId, teamsessionId, teamLeader:currentTLLeader:currentTLName}))Name}))})
-    .then})
+  function approveTabRequestFull(rowId, sessionId) {
+    if(!confirm('✅ Approve request tab baru ini?')) return;
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=approveTabRequest&data='+encodeURIComponent(JSON.stringify({rowId:rowId, sessionId:sessionId, teamLeader:currentTLName}))})
     .then(function(r){return r.json()})
-    .then(function(r){ if(r.success){ alert('✅ '+(function(r){return r.json()})
-    .then(function(r){ if(r.success){ alert('✅ '+r.message); refreshr.message); refreshDashboardFull(); }DashboardFull(); } else { alert else { alert('❌ Gagal: '+r.message); } });
-('❌ Gagal: '+r.message); } });
+    .then(function(r){ if(r.success){ alert('✅ '+r.message); refreshDashboardFull(); } else { alert('❌ Gagal: '+r.message); } });
   }
-
-  function  }
 
   function generateCodeFull() {
-    var generateCodeFull() {
-    var t = prompt(' t = prompt('Ketik: OKetik: OJT atau DW');
-JT atau DW');
-    if(!t || (t !==    if(!t || (t !== 'OJT' 'OJT' && t !== ' && t !== 'DW')) return;
-    fetch(APIDW')) return;
-    fetch(API_URL,{method:'POST',headers_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=generateCode'},body:'action=generateCode&data='+encodeURIComponent(&data='+encodeURIComponent(JSON.stringify({teamLeader:currentTLJSON.stringify({teamLeader:currentTLName,codeType:t}))})
-Name,codeType:t}))})
-       .then(function(r){return r.json()})
+    var t = prompt('Ketik: OJT atau DW');
+    if(!t || (t !== 'OJT' && t !== 'DW')) return;
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=generateCode&data='+encodeURIComponent(JSON.stringify({teamLeader:currentTLName,codeType:t}))})
     .then(function(r){return r.json()})
-    .then(function(r .then(function(r){ if(r.success){ navigator.cl){ if(r.success){ navigator.clipboard.writeTextipboard.writeText(r.code); alert('✅ K(r.code); alert('✅ Kode: '+rode: '+r.code+'\n\n📋 Sud.code+'\n\n📋 Sudah di-copyah di-copy!'); } else { alert('!'); } else { alert('❌ '+r.message❌ '+r.message); } });
- ); } });
+    .then(function(r){ if(r.success){ navigator.clipboard.writeText(r.code); alert('✅ Kode: '+r.code+'\n\n📋 Sudah di-copy!'); } else { alert('❌ '+r.message); } });
   }
-
-  function forceLogoutDirect }
 
   function forceLogoutDirect(lineNum) {
-    if(!confirm(lineNum) {
-    if(!confirm('⚠️ Force('⚠️ Force logout Line '+lineNum+' logout Line '+lineNum+'?')) return;
-    fetch(API?')) return;
-    fetch(API_URL,{method_URL,{method:'POST',headers:{'Content-Type:'POST',headers:{'Content-Type':'application/x-':'application/x-www-form-urlencoded'},body:'www-form-urlencoded'},body:'action=getDashboard&data='+encodeURIComponent(JSONaction=getDashboard&data='+encodeURIComponent(JSON.stringify({teamLeader:currentTLName.stringify({teamLeader:currentTLName,wh:currentTLWH}))})
+    if(!confirm('⚠️ Force logout Line '+lineNum+'?')) return;
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=getDashboard&data='+encodeURIComponent(JSON.stringify({teamLeader:currentTLName,wh:currentTLWH}))})
     .then(function(r){return r.json()})
     .then(function(data){
-      var,wh:currentTLWH}))})
-    .then(function(r){return r.json()})
-    .then(function(data){
-      var all = []. all = [].concat(data.activeconcat(data.activeStaff||[], data.activeOJT||Staff||[], data.activeOJT||[], data.activeDW[], data.activeDW||[]);
-     ||[]);
+      var all = [].concat(data.activeStaff||[], data.activeOJT||[], data.activeDW||[]);
       var found = null;
-      for(var var found = null;
-      for(var i=0;i<all.length;i++) i=0;i<all.length;i++){ if(all[i].line == line{ if(all[i].line == lineNum){ found =Num){ found = all[i]; break; } }
-      all[i]; break; } }
-      if(!found){ if(!found){ alert('Line '+lineNum+' alert('Line '+lineNum+' tidak ditemukan!'); refreshDashboardFull(); return; }
- tidak ditemukan!'); refreshDashboardFull(); return; }
-      fetch(API      fetch(API_URL,{method:'POST',headers_URL,{method:'POST',headers:{'Content-Type:{'Content-Type':'application/x-www-form-urlencoded':'application/x-www-form-urlencoded'},body:''},body:'action=logout&data='+encodeaction=logout&data='+encodeURIComponent(JSONURIComponent(JSON.stringify({sessionId:found.row.stringify({sessionId:found.row}))})
-}))})
-      .then(function(r){return      .then(function(r){return r.json()})
-      .then(function(res){ r.json()})
-      .then(function(res){ if(res.success){ alert('✅ Force logout berhasil! if(res.success){ alert('✅ Force logout berhasil! '+res.message); refreshDashboardFull(); } else { alert '+res.message); refreshDashboardFull(); } else { alert('❌ Gagal: '+res.message); } });
-    });
-  }
-
-  // ============ SHOW('❌ Gagal: '+res.message); } });
+      for(var i=0;i<all.length;i++){ if(all[i].line == lineNum){ found = all[i]; break; } }
+      if(!found){ alert('Line '+lineNum+' tidak ditemukan!'); refreshDashboardFull(); return; }
+      fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=logout&data='+encodeURIComponent(JSON.stringify({sessionId:found.row}))})
+      .then(function(r){return r.json()})
+      .then(function(res){ if(res.success){ alert('✅ Force logout berhasil! '+res.message); refreshDashboardFull(); } else { alert('❌ Gagal: '+res.message); } });
     });
   }
 
   // ============ SHOW MESSAGE ============
-  function MESSAGE ============
-  function showMessage(t showMessage(tx, tp)x, tp) {
-    var m = document.getElementById(' {
+  function showMessage(tx, tp) {
     var m = document.getElementById('message');
-    m.textContent = txmessage');
     m.textContent = tx;
-    m.class;
     m.className = 'message ' + tp;
-Name = 'message ' + tp;
     clearTimeout(m._t);
-    m._t =    clearTimeout(m._t);
-    m._t = setTimeout(function(){ m.className = 'message'; },  setTimeout(function(){ m.className = 'message'; }, 5000);
-  }
-
-  // ============ INIT =5000);
+    m._t = setTimeout(function(){ m.className = 'message'; }, 5000);
   }
 
   // ============ INIT ============
- ===========
   window.onload = function() {
-    if (localStorage.getItem('openDashboard') === 'true') {
-      localStorage.removeItem('open window.onload = function() {
+    // Jalankan update clock
+    updateClock();
+    setInterval(updateClock, 1000);
+    
+    // Inisialisasi packing lines
+    initPackingLines();
+    
     if (localStorage.getItem('openDashboard') === 'true') {
       localStorage.removeItem('openDashboard');
-      document.querySelector('.container').Dashboard');
-      document.querySelector('.container').style.display = 'style.display = 'none';
-      document.querySelector('.dashboard-btnnone';
-      document.querySelector('.dashboard-btn').style.display =').style.display = 'none';
-      var tlName 'none';
-      var tlName = localStorage.getItem(' = localStorage.getItem('tlName');
-      var pw =tlName');
+      document.querySelector('.container').style.display = 'none';
+      document.querySelector('.dashboard-btn').style.display = 'none';
+      var tlName = localStorage.getItem('tlName');
       var pw = localStorage.getItem('tlPw');
       var tlWH = localStorage.getItem('tlWH') || '';
-      if (!tlName || !pw localStorage.getItem('tlPw');
-      var tlWH = localStorage.getItem('tlWH') || '';
       if (!tlName || !pw || !tlWH) { alert('Session expired!'); window.close(); return; }
-      fetch || !tlWH) { alert('Session expired!'); window.close(); return; }
-      fetch(API_URL(API_URL, { method: 'POST',, { method: 'POST', headers: { ' headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'action=verifyTL&data=' + encodeURIComponent(JSON.stringify({ tlName: tlName, password: pw })) })
-      .then(function(rContent-Type': 'application/x-www-form-urlencoded' }, body: 'action=verifyTL&data=' + encodeURIComponent(JSON.stringify({ tlName: tlName, password: pw })) })
+      fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'action=verifyTL&data=' + encodeURIComponent(JSON.stringify({ tlName: tlName, password: pw })) })
       .then(function(r) { return r.json(); })
-      .then(function(v) { return r.json(); })
       .then(function(v) {
-        if (!v.success) { alert(') {
         if (!v.success) { alert('❌ ' + v.message); window.close(); return; }
         currentTLName = tlName;
-❌ ' + v.message); window.close(); return; }
-        currentTLName = tlName;
         currentTLWH = tlWH;
-        currentTLWH = tlWH;
-        document.body.innerHTML        document.body.innerHTML = '<div id="dash-full" style="padding = '<div id="dash-full" style="padding:20px;max-width:100%;background:#f:20px;max-width:100%;background:#f5f7fa5f7fa;min-height:100vh;"></div;min-height:100vh;"></div>';
+        document.body.innerHTML = '<div id="dash-full" style="padding:20px;max-width:100%;background:#f5f7fa;min-height:100vh;"></div>';
         refreshDashboardFull();
-        set>';
-        refreshDashboardFull();
-        setInterval(function() { refreshDashboardFull(); }, 15000Interval(function() { refreshDashboardFull(); }, 15000);
-      });
-     );
+        setInterval(function() { refreshDashboardFull(); }, 15000);
       });
       return;
     }
-    document.getElementById(' return;
-    }
-    document.getElementById('mainContainer').stylemainContainer').style.display = 'block';
-    check.display = 'block';
-    checkSavedSessionSavedSession();
-  };
-</script>
-</();
+    document.getElementById('mainContainer').style.display = 'block';
+    checkSavedSession();
   };
 </script>
 </body>
-</htmlbody>
 </html>
