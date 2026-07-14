@@ -82,7 +82,7 @@
     .trial-watermark.show { display: block; }
     .code-display { background: #e8f5e9; border: 2px solid #66bb6a; border-radius: 10px; padding: 10px; text-align: center; font-size: 14px; font-weight: 700; color: #2e7d32; margin: 8px 0; display: none; }
     
-    /* ===== MINI BROWSER DI LOGIN ===== */
+    /* ===== MINI BROWSER ===== */
     .mini-browser-container {
       margin-top: 10px;
       border: 1px solid #ddd;
@@ -149,6 +149,13 @@
       align-items: center;
       justify-content: center;
       margin: 0;
+    }
+    .mini-browser-toolbar .search-engine-label {
+      font-size: 10px;
+      color: #999;
+      background: #e8f0fe;
+      padding: 2px 8px;
+      border-radius: 10px;
     }
     .mini-browser-iframe {
       width: 100%;
@@ -223,14 +230,15 @@
     <button class="btn-back-browser" onclick="goBackToBrowser()">⬅️ Kembali ke Browser</button>
   </div>
 
-  <!-- ===== MINI BROWSER PREVIEW ===== -->
+  <!-- ===== MINI BROWSER PREVIEW (Bing) ===== -->
   <div class="mini-browser-container" id="miniBrowser">
     <div class="mini-browser-toolbar">
+      <span class="search-engine-label">🔍 Bing</span>
       <button class="nav-btn" onclick="miniGoBack()">◀</button>
       <button class="nav-btn" onclick="miniGoForward()">▶</button>
       <button class="nav-btn" onclick="miniRefresh()">⟳</button>
       <button class="nav-btn" onclick="miniHome()">🏠</button>
-      <input class="address-bar" id="miniAddress" placeholder="Ketik URL..." onkeydown="if(event.key==='Enter'){miniNavigate(this.value);}">
+      <input class="address-bar" id="miniAddress" placeholder="Ketik URL atau search..." onkeydown="if(event.key==='Enter'){miniNavigate(this.value);}">
       <button class="btn-go" onclick="miniNavigate(document.getElementById('miniAddress').value)">Go</button>
       <button class="btn-close-preview" onclick="closeMiniBrowser()">✕</button>
     </div>
@@ -331,14 +339,14 @@
     }
   }
 
-  // ============ MINI BROWSER ============
+  // ============ MINI BROWSER (BING - TIDAK DIBLOKIR) ============
   function openMiniBrowser(url) {
     var container = document.getElementById('miniBrowser');
     container.classList.add('show');
     if (url) {
       miniNavigate(url);
     } else {
-      miniNavigate('https://www.google.com');
+      miniNavigate('https://www.bing.com');
     }
   }
 
@@ -349,8 +357,13 @@
 
   function miniNavigate(url) {
     if (!url) return;
+    // Jika user mengetik "google", arahkan ke Bing sebagai fallback
+    if (url.toLowerCase().includes('google')) {
+      url = 'https://www.bing.com/search?q=' + encodeURIComponent(url.replace(/https?:\/\/[^\/]+\/?/g, ''));
+    }
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = 'https://' + url;
+      // Jika bukan URL, coba search di Bing
+      url = 'https://www.bing.com/search?q=' + encodeURIComponent(url);
     }
     var address = document.getElementById('miniAddress');
     var iframe = document.getElementById('miniIframe');
@@ -422,7 +435,7 @@
   }
 
   function miniHome() {
-    miniNavigate('https://www.google.com');
+    miniNavigate('https://www.bing.com');
   }
 
   // ============ CEK & TAMPILKAN TOMBOL KEMBALI ============
@@ -434,8 +447,7 @@
         var p = JSON.parse(s);
         if (p && p.id) {
           container.style.display = 'block';
-          // Buka mini browser preview
-          openMiniBrowser('https://www.google.com');
+          openMiniBrowser('https://www.bing.com');
           return;
         }
       } catch(e) {}
