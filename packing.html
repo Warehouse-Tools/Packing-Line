@@ -8,7 +8,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: rgba(0,0,0,0.7); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; color: #333; }
     
-    /* ===== BROWSER TAB FULL ===== */
     #browserTab {
       position: fixed;
       top: 0;
@@ -132,7 +131,6 @@
     }
     .browser-content .error-container .open-link:hover { background: #1557b0; }
 
-    /* ===== FLOATING TIMESTAMP ===== */
     #floatTimer {
       position: fixed;
       bottom: 20px;
@@ -296,6 +294,7 @@
   var browserHistory = [];
   var browserHistoryIndex = -1;
   var floatDragData = { isDragging: false, offsetX: 0, offsetY: 0 };
+  var sessionCheckInterval = null;
 
   // ============ TOAST ============
   function showToast(msg) {
@@ -440,7 +439,7 @@
   }
 
   function browserHome() {
-    browserNavigate('https://www.google.com');
+    browserNavigate('https://www.bing.com');
   }
 
   function focusBrowser() {
@@ -450,9 +449,7 @@
   }
 
   function goBackToLogin() {
-    // Cari file login.html di folder yang sama
     var loginUrl = window.location.href.replace('packing.html', 'login.html');
-    // Jika tidak ada perubahan, coba dengan path yang berbeda
     if (loginUrl === window.location.href) {
       var parts = window.location.href.split('/');
       parts.pop();
@@ -625,6 +622,64 @@
     });
   }
 
+  // ============ AUTO CHECK SESSION (SETIAP 10 DETIK) ============
+  function startAutoCheckSession() {
+    if (sessionCheckInterval) {
+      clearInterval(sessionCheckInterval);
+      sessionCheckInterval = null;
+    }
+    
+    sessionCheckInterval = setInterval(function() {
+      if (!currentSession) {
+        clearInterval(sessionCheckInterval);
+        sessionCheckInterval = null;
+        return;
+      }
+      
+      var s = localStorage.getItem('packingSession');
+      if (!s) {
+        // Session di localStorage hilang → logout otomatis
+        showToast('⚠️ Session telah berakhir!');
+        clearSavedSession();
+        currentSession = null;
+        closeFloat();
+        document.getElementById('floatTimer').style.display = 'none';
+        document.getElementById('browserTab').style.display = 'none';
+        setTimeout(function() {
+          goBackToLogin();
+        }, 1500);
+        return;
+      }
+      
+      try {
+        var p = JSON.parse(s);
+        if (p.id !== currentSession.id) {
+          // Session ID berbeda → logout
+          showToast('⚠️ Session telah berakhir!');
+          clearSavedSession();
+          currentSession = null;
+          closeFloat();
+          document.getElementById('floatTimer').style.display = 'none';
+          document.getElementById('browserTab').style.display = 'none';
+          setTimeout(function() {
+            goBackToLogin();
+          }, 1500);
+        }
+      } catch(e) {
+        // Error parsing → logout
+        showToast('⚠️ Session error!');
+        clearSavedSession();
+        currentSession = null;
+        closeFloat();
+        document.getElementById('floatTimer').style.display = 'none';
+        document.getElementById('browserTab').style.display = 'none';
+        setTimeout(function() {
+          goBackToLogin();
+        }, 1500);
+      }
+    }, 10000); // Cek setiap 10 detik
+  }
+
   function clearSavedSession() {
     localStorage.removeItem('packingSession');
   }
@@ -645,6 +700,10 @@
         if (durationInterval) {
           clearInterval(durationInterval);
           durationInterval = null;
+        }
+        if (sessionCheckInterval) {
+          clearInterval(sessionCheckInterval);
+          sessionCheckInterval = null;
         }
         clearSavedSession();
         currentSession = null;
@@ -677,9 +736,12 @@
     if (durationInterval) clearInterval(durationInterval);
     durationInterval = setInterval(updateFloatTimer, 1000);
 
-    // Buka Google di browser
+    // Start auto check session (deteksi logout dari tab lain)
+    startAutoCheckSession();
+
+    // Buka Bing di browser
     setTimeout(function() {
-      browserNavigate('https://www.google.com');
+      browserNavigate('https://www.bing.com');
     }, 300);
   }
 
