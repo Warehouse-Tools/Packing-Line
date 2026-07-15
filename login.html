@@ -81,71 +81,20 @@
     .trial-watermark { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ff9800; color: white; padding: 5px 20px; border-radius: 20px; font-size: 12px; font-weight: 700; z-index: 999; opacity: 0.7; display: none; }
     .trial-watermark.show { display: block; }
     .code-display { background: #e8f5e9; border: 2px solid #66bb6a; border-radius: 10px; padding: 10px; text-align: center; font-size: 14px; font-weight: 700; color: #2e7d32; margin: 8px 0; display: none; }
-    
-    /* ===== FLOATING TIMESTAMP DI LOGIN ===== */
-    #loginFloatingTimer {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-      z-index: 9997;
-      border: 1px solid #e0e0e0;
-      min-width: 260px;
-      max-width: 320px;
-      overflow: hidden;
-      transition: all 0.3s;
-      animation: slideUp 0.3s ease;
+
+    /* ===== TIMER DI SESI AKTIF (BERJALAN) ===== */
+    .session-timer {
+      font-size: 14px;
+      color: #1a73e8;
+      text-align: center;
+      padding: 5px;
+      background: #e8f0fe;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-weight: 600;
       display: none;
     }
-    #loginFloatingTimer.show { display: block; }
-    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    
-    .login-float-header {
-      background: #1a73e8;
-      color: white;
-      padding: 8px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: move;
-      user-select: none;
-    }
-    .login-float-header .title { font-weight: 700; font-size: 12px; }
-    .login-float-header .timer-badge { font-size: 14px; font-weight: 700; background: rgba(255,255,255,0.2); padding: 2px 12px; border-radius: 12px; }
-    .login-float-header .float-actions { display: flex; gap: 4px; }
-    .login-float-header .float-actions button {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      color: white;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      margin: 0;
-      transition: 0.2s;
-    }
-    .login-float-header .float-actions button:hover { background: rgba(255,255,255,0.4); }
-    .login-float-header .float-actions .close-float:hover { background: #e53935; }
-    
-    .login-float-body {
-      padding: 12px 14px;
-      font-size: 12px;
-    }
-    .login-float-body .session-info .row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px solid #f0f0f0; }
-    .login-float-body .session-info .row .label { font-weight: 600; color: #555; }
-    .login-float-body .session-info .row .value { color: #333; }
-    .login-float-body .session-id { background: #f0f0f0; padding: 4px 10px; border-radius: 4px; font-size: 10px; color: #666; text-align: center; margin-top: 8px; }
-    
-    #loginFloatingTimer.minimized { min-width: 160px; max-width: 200px; }
-    #loginFloatingTimer.minimized .login-float-body { display: none; }
-    #loginFloatingTimer.minimized .login-float-header .timer-badge { display: none; }
+    .session-timer.show { display: block; }
   </style>
 </head>
 <body>
@@ -169,26 +118,6 @@
 
 <!-- ===== DASHBOARD TL ===== -->
 <button class="dashboard-btn" onclick="showDashboard()">📊 Dashboard TL</button>
-
-<!-- ===== FLOATING TIMESTAMP (LOGIN) ===== -->
-<div id="loginFloatingTimer">
-  <div class="login-float-header" id="loginFloatHeader">
-    <span class="title">⏱️ Sesi</span>
-    <span class="timer-badge" id="loginFloatTime">00:00:00</span>
-    <div class="float-actions">
-      <button onclick="minimizeLoginFloat()" title="Minimize" id="loginMinimizeBtn">─</button>
-      <button class="close-float" onclick="closeLoginFloat()" title="Tutup">✕</button>
-    </div>
-  </div>
-  <div class="login-float-body">
-    <div class="session-info">
-      <div class="row"><span class="label">👤 Nama</span><span class="value" id="lfNama">-</span></div>
-      <div class="row"><span class="label">🏭 Line</span><span class="value" id="lfLine">-</span></div>
-      <div class="row"><span class="label">📌 Tipe</span><span class="value" id="lfType">-</span></div>
-    </div>
-    <div class="session-id" id="lfSessionId">🆔 ID: -</div>
-  </div>
-</div>
 
 <!-- ===== MAIN CONTAINER ===== -->
 <div class="container" id="mainContainer">
@@ -250,6 +179,7 @@
 
   <!-- ===== TAB SESI AKTIF ===== -->
   <div id="active-session-tab" class="tab-content">
+    <div class="session-timer" id="sessionTimer">⏱️ Sesi Aktif: <span id="sessionTimerDisplay">00:00:00</span></div>
     <div id="active-session-info"><p style="text-align:center;color:#999;padding:20px;">Tidak ada sesi aktif</p></div>
   </div>
 
@@ -269,9 +199,7 @@
   var codeCheckInterval = null;
   var currentTLName = null;
   var currentTLWH = '';
-  var loginFloatInterval = null;
-  var loginFloatMinimized = false;
-  var floatDragData = { isDragging: false, offsetX: 0, offsetY: 0 };
+  var sessionTimerInterval = null;
 
   // ============ FUNGSI UTAMA ============
   function updateClock() {
@@ -302,92 +230,46 @@
       document.getElementById('active-session-tab').classList.add('active');
       updateActiveSessionDisplay();
       checkAndShowBackToBrowser();
+      startSessionTimer();
     }
   }
 
-  // ============ FLOATING TIMESTAMP (LOGIN) ============
-  function showLoginFloatingTimer() {
-    var ft = document.getElementById('loginFloatingTimer');
-    ft.classList.add('show');
-    ft.classList.remove('minimized');
-    loginFloatMinimized = false;
-    document.getElementById('loginMinimizeBtn').textContent = '─';
-    updateLoginFloatTimer();
-    if (loginFloatInterval) clearInterval(loginFloatInterval);
-    loginFloatInterval = setInterval(updateLoginFloatTimer, 1000);
-  }
-
-  function updateLoginFloatTimer() {
+  // ============ SESSION TIMER ============
+  function startSessionTimer() {
+    var timerEl = document.getElementById('sessionTimer');
+    var displayEl = document.getElementById('sessionTimerDisplay');
+    
     if (!currentSession) {
-      document.getElementById('loginFloatingTimer').classList.remove('show');
-      if (loginFloatInterval) {
-        clearInterval(loginFloatInterval);
-        loginFloatInterval = null;
+      timerEl.classList.remove('show');
+      if (sessionTimerInterval) {
+        clearInterval(sessionTimerInterval);
+        sessionTimerInterval = null;
       }
       return;
     }
-    var d = Math.floor((new Date() - currentSession.loginTime) / 1000);
-    var h = Math.floor(d / 3600);
-    var m = Math.floor((d % 3600) / 60);
-    var s = d % 60;
-    var timer = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
-    document.getElementById('loginFloatTime').textContent = timer;
-    document.getElementById('lfNama').textContent = currentSession.nama;
-    document.getElementById('lfLine').textContent = currentSession.line;
-    document.getElementById('lfType').textContent = currentSession.type;
-    document.getElementById('lfSessionId').textContent = '🆔 ID: ' + currentSession.id;
-  }
-
-  function minimizeLoginFloat() {
-    var ft = document.getElementById('loginFloatingTimer');
-    loginFloatMinimized = !loginFloatMinimized;
-    if (loginFloatMinimized) {
-      ft.classList.add('minimized');
-      document.getElementById('loginMinimizeBtn').textContent = '□';
-    } else {
-      ft.classList.remove('minimized');
-      document.getElementById('loginMinimizeBtn').textContent = '─';
+    
+    timerEl.classList.add('show');
+    
+    if (sessionTimerInterval) {
+      clearInterval(sessionTimerInterval);
+      sessionTimerInterval = null;
     }
+    
+    sessionTimerInterval = setInterval(function() {
+      if (!currentSession) {
+        timerEl.classList.remove('show');
+        clearInterval(sessionTimerInterval);
+        sessionTimerInterval = null;
+        return;
+      }
+      var d = Math.floor((new Date() - currentSession.loginTime) / 1000);
+      var h = Math.floor(d / 3600);
+      var m = Math.floor((d % 3600) / 60);
+      var s = d % 60;
+      var timer = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+      displayEl.textContent = timer;
+    }, 1000);
   }
-
-  function closeLoginFloat() {
-    document.getElementById('loginFloatingTimer').classList.remove('show');
-    if (loginFloatInterval) {
-      clearInterval(loginFloatInterval);
-      loginFloatInterval = null;
-    }
-  }
-
-  // ============ DRAG FLOATING ============
-  document.getElementById('loginFloatHeader').addEventListener('mousedown', function(e) {
-    if (e.target.tagName === 'BUTTON') return;
-    var ft = document.getElementById('loginFloatingTimer');
-    var rect = ft.getBoundingClientRect();
-    floatDragData.isDragging = true;
-    floatDragData.offsetX = e.clientX - rect.left;
-    floatDragData.offsetY = e.clientY - rect.top;
-    ft.style.cursor = 'grabbing';
-  });
-
-  document.addEventListener('mousemove', function(e) {
-    if (!floatDragData.isDragging) return;
-    var ft = document.getElementById('loginFloatingTimer');
-    var newX = e.clientX - floatDragData.offsetX;
-    var newY = e.clientY - floatDragData.offsetY;
-    newX = Math.max(0, Math.min(newX, window.innerWidth - ft.offsetWidth));
-    newY = Math.max(0, Math.min(newY, window.innerHeight - ft.offsetHeight));
-    ft.style.left = newX + 'px';
-    ft.style.top = newY + 'px';
-    ft.style.right = 'auto';
-    ft.style.bottom = 'auto';
-  });
-
-  document.addEventListener('mouseup', function() {
-    if (floatDragData.isDragging) {
-      floatDragData.isDragging = false;
-      document.getElementById('loginFloatingTimer').style.cursor = 'default';
-    }
-  });
 
   // ============ CEK & TAMPILKAN TOMBOL KEMBALI ============
   function checkAndShowBackToBrowser() {
@@ -398,13 +280,11 @@
         var p = JSON.parse(s);
         if (p && p.id) {
           container.style.display = 'block';
-          showLoginFloatingTimer();
           return;
         }
       } catch(e) {}
     }
     container.style.display = 'none';
-    closeLoginFloat();
   }
 
   // ============ KEMBALI KE BROWSER ============
@@ -429,7 +309,10 @@
       params.set('loginTime', p.loginTime || new Date().toISOString());
       if (p.teamLeader) params.set('teamLeader', p.teamLeader);
       var popupUrl = mainUrl + '?' + params.toString();
-      window.open(popupUrl, '_blank');
+      var newTab = window.open(popupUrl, '_blank');
+      if (!newTab) {
+        alert('⚠️ Popup diblokir! Izinkan popup untuk membuka browser.');
+      }
     } catch(e) {
       alert('❌ Gagal membuka browser: ' + e.message);
     }
@@ -508,6 +391,7 @@
         updateActiveSessionDisplay();
         switchTab('active-session');
         checkAndShowBackToBrowser();
+        startSessionTimer();
         return true;
       } catch(e) {
         localStorage.removeItem('packingSession');
@@ -562,7 +446,10 @@
             params.set('type', 'Staff');
             params.set('loginTime', new Date().toISOString());
             var popupUrl = mainUrl + '?' + params.toString();
-            window.open(popupUrl, '_blank');
+            var newTab = window.open(popupUrl, '_blank');
+            if (!newTab) {
+              alert('⚠️ Popup diblokir! Izinkan popup untuk membuka browser.');
+            }
           }, 500);
           return;
         }
@@ -573,6 +460,7 @@
         e.target.reset();
         saveSession();
         checkAndShowBackToBrowser();
+        startSessionTimer();
       } else {
         showMessage(r.message,'error');
       }
@@ -629,7 +517,10 @@
             params.set('teamLeader', t);
             params.set('loginTime', new Date().toISOString());
             var popupUrl = mainUrl + '?' + params.toString();
-            window.open(popupUrl, '_blank');
+            var newTab = window.open(popupUrl, '_blank');
+            if (!newTab) {
+              alert('⚠️ Popup diblokir! Izinkan popup untuk membuka browser.');
+            }
           }, 500);
           return;
         }
@@ -642,6 +533,7 @@
         if(codeCheckInterval){clearInterval(codeCheckInterval);codeCheckInterval=null}
         document.getElementById('code-display').style.display='none';
         checkAndShowBackToBrowser();
+        startSessionTimer();
       } else {
         showMessage(r.message,'error');
       }
@@ -768,7 +660,11 @@
         updateActiveSessionDisplay();
         switchTab('staff');
         document.getElementById('backToBrowserContainer').style.display = 'none';
-        closeLoginFloat();
+        if (sessionTimerInterval) {
+          clearInterval(sessionTimerInterval);
+          sessionTimerInterval = null;
+        }
+        document.getElementById('sessionTimer').classList.remove('show');
         showMessage('⚠️ Sesi telah diakhiri oleh Team Leader.', 'warning');
       } else {
         alert('⚠️ Tidak bisa mengecek session (data server kosong)');
@@ -789,7 +685,11 @@
         currentSession = null;
         updateActiveSessionDisplay();
         document.getElementById('backToBrowserContainer').style.display = 'none';
-        closeLoginFloat();
+        if (sessionTimerInterval) {
+          clearInterval(sessionTimerInterval);
+          sessionTimerInterval = null;
+        }
+        document.getElementById('sessionTimer').classList.remove('show');
         setTimeout(function(){switchTab('staff')},2000);
         document.querySelectorAll('form').forEach(function(f){ f.reset(); });
         document.getElementById('wh-display').textContent = 'Pilih WH';
