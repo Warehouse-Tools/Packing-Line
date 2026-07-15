@@ -81,20 +81,6 @@
     .trial-watermark { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); background: #ff9800; color: white; padding: 5px 20px; border-radius: 20px; font-size: 12px; font-weight: 700; z-index: 999; opacity: 0.7; display: none; }
     .trial-watermark.show { display: block; }
     .code-display { background: #e8f5e9; border: 2px solid #66bb6a; border-radius: 10px; padding: 10px; text-align: center; font-size: 14px; font-weight: 700; color: #2e7d32; margin: 8px 0; display: none; }
-
-    /* ===== TIMER DI SESI AKTIF (BERJALAN) ===== */
-    .session-timer {
-      font-size: 14px;
-      color: #1a73e8;
-      text-align: center;
-      padding: 5px;
-      background: #e8f0fe;
-      border-radius: 6px;
-      margin-bottom: 8px;
-      font-weight: 600;
-      display: none;
-    }
-    .session-timer.show { display: block; }
   </style>
 </head>
 <body>
@@ -179,7 +165,6 @@
 
   <!-- ===== TAB SESI AKTIF ===== -->
   <div id="active-session-tab" class="tab-content">
-    <div class="session-timer" id="sessionTimer">⏱️ Sesi Aktif: <span id="sessionTimerDisplay">00:00:00</span></div>
     <div id="active-session-info"><p style="text-align:center;color:#999;padding:20px;">Tidak ada sesi aktif</p></div>
   </div>
 
@@ -236,38 +221,22 @@
 
   // ============ SESSION TIMER ============
   function startSessionTimer() {
-    var timerEl = document.getElementById('sessionTimer');
-    var displayEl = document.getElementById('sessionTimerDisplay');
-    
-    if (!currentSession) {
-      timerEl.classList.remove('show');
-      if (sessionTimerInterval) {
-        clearInterval(sessionTimerInterval);
-        sessionTimerInterval = null;
-      }
-      return;
-    }
-    
-    timerEl.classList.add('show');
-    
+    // Timer ini akan berjalan dan mengupdate display di session-card
     if (sessionTimerInterval) {
       clearInterval(sessionTimerInterval);
       sessionTimerInterval = null;
     }
     
+    if (!currentSession) return;
+    
     sessionTimerInterval = setInterval(function() {
       if (!currentSession) {
-        timerEl.classList.remove('show');
         clearInterval(sessionTimerInterval);
         sessionTimerInterval = null;
         return;
       }
-      var d = Math.floor((new Date() - currentSession.loginTime) / 1000);
-      var h = Math.floor(d / 3600);
-      var m = Math.floor((d % 3600) / 60);
-      var s = d % 60;
-      var timer = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
-      displayEl.textContent = timer;
+      // Update display session-card
+      updateActiveSessionDisplay();
     }, 1000);
   }
 
@@ -540,7 +509,7 @@
     }).catch(function(e){showMessage('Gagal: '+e.message,'error')})
   }
 
-  // ============ UPDATE DISPLAY ============
+  // ============ UPDATE DISPLAY (HANYA 1 TIMESTAMP) ============
   function updateActiveSessionDisplay() {
     var c = document.getElementById('active-session-info');
     if(!currentSession){
@@ -664,7 +633,6 @@
           clearInterval(sessionTimerInterval);
           sessionTimerInterval = null;
         }
-        document.getElementById('sessionTimer').classList.remove('show');
         showMessage('⚠️ Sesi telah diakhiri oleh Team Leader.', 'warning');
       } else {
         alert('⚠️ Tidak bisa mengecek session (data server kosong)');
@@ -689,7 +657,6 @@
           clearInterval(sessionTimerInterval);
           sessionTimerInterval = null;
         }
-        document.getElementById('sessionTimer').classList.remove('show');
         setTimeout(function(){switchTab('staff')},2000);
         document.querySelectorAll('form').forEach(function(f){ f.reset(); });
         document.getElementById('wh-display').textContent = 'Pilih WH';
