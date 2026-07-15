@@ -249,7 +249,7 @@
     <button class="btn-back-browser" onclick="goBackToBrowser()">⬅️ Kembali ke Browser</button>
   </div>
 
-  <!-- ===== MINI BROWSER PREVIEW (Bing) ===== -->
+  <!-- ===== MINI BROWSER PREVIEW ===== -->
   <div class="mini-browser-container" id="miniBrowser">
     <div class="mini-browser-toolbar">
       <span class="search-engine-label">🔍 Bing</span>
@@ -356,7 +356,6 @@
       document.getElementById('active-session-tab').classList.add('active');
       updateActiveSessionDisplay();
       checkAndShowBackToBrowser();
-      // Start login timer
       startLoginTimer();
     }
   }
@@ -422,15 +421,6 @@
 
   function miniNavigate(url) {
     if (!url) return;
-    // Jika user mengetik "google", arahkan ke Bing search
-    if (url.toLowerCase().includes('google.com') || url.toLowerCase().includes('www.google')) {
-      var searchQuery = url.replace(/https?:\/\/[^\/]+\/?/g, '').trim();
-      if (searchQuery) {
-        url = 'https://www.bing.com/search?q=' + encodeURIComponent(searchQuery);
-      } else {
-        url = 'https://www.bing.com';
-      }
-    }
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       url = 'https://www.bing.com/search?q=' + encodeURIComponent(url);
     }
@@ -454,9 +444,7 @@
             iframe.style.display = 'none';
           }
         }
-      } catch(e) {
-        // Cross-origin - normal
-      }
+      } catch(e) {}
     };
     
     iframe.onerror = function() {
@@ -516,7 +504,6 @@
         var p = JSON.parse(s);
         if (p && p.id) {
           container.style.display = 'block';
-          // Buka mini browser
           openMiniBrowser('https://www.bing.com');
           return;
         }
