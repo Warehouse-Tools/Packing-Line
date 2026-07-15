@@ -82,121 +82,70 @@
     .trial-watermark.show { display: block; }
     .code-display { background: #e8f5e9; border: 2px solid #66bb6a; border-radius: 10px; padding: 10px; text-align: center; font-size: 14px; font-weight: 700; color: #2e7d32; margin: 8px 0; display: none; }
     
-    /* ===== MINI BROWSER ===== */
-    .mini-browser-container {
-      margin-top: 10px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
+    /* ===== FLOATING TIMESTAMP DI LOGIN ===== */
+    #loginFloatingTimer {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      z-index: 9997;
+      border: 1px solid #e0e0e0;
+      min-width: 260px;
+      max-width: 320px;
       overflow: hidden;
+      transition: all 0.3s;
+      animation: slideUp 0.3s ease;
       display: none;
     }
-    .mini-browser-container.show { display: block; }
-    .mini-browser-toolbar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      background: #f1f3f4;
-      border-bottom: 1px solid #dadce0;
-      flex-wrap: wrap;
-    }
-    .mini-browser-toolbar .nav-btn {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      padding: 4px 8px;
-      border-radius: 4px;
-      color: #555;
-      width: auto;
-      margin: 0;
-    }
-    .mini-browser-toolbar .nav-btn:hover { background: #e0e0e0; }
-    .mini-browser-toolbar .address-bar {
-      flex: 1;
-      padding: 4px 12px;
-      border: 1px solid #dadce0;
-      border-radius: 20px;
-      font-size: 13px;
-      background: white;
-      outline: none;
-      min-width: 80px;
-    }
-    .mini-browser-toolbar .address-bar:focus { border-color: #1a73e8; }
-    .mini-browser-toolbar .btn-go {
+    #loginFloatingTimer.show { display: block; }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    
+    .login-float-header {
       background: #1a73e8;
       color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 4px 14px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 12px;
-      width: auto;
-      margin: 0;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: move;
+      user-select: none;
     }
-    .mini-browser-toolbar .btn-go:hover { opacity: 0.9; }
-    .mini-browser-toolbar .btn-close-preview {
-      background: #e53935;
-      color: white;
+    .login-float-header .title { font-weight: 700; font-size: 12px; }
+    .login-float-header .timer-badge { font-size: 14px; font-weight: 700; background: rgba(255,255,255,0.2); padding: 2px 12px; border-radius: 12px; }
+    .login-float-header .float-actions { display: flex; gap: 4px; }
+    .login-float-header .float-actions button {
+      background: rgba(255,255,255,0.2);
       border: none;
+      color: white;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      width: 24px;
-      height: 24px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 11px;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 0;
       margin: 0;
+      transition: 0.2s;
     }
-    .mini-browser-toolbar .search-engine-label {
-      font-size: 10px;
-      color: #1a73e8;
-      background: #e8f0fe;
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-weight: 600;
-    }
-    .mini-browser-iframe {
-      width: 100%;
-      height: 300px;
-      border: none;
-      background: white;
-    }
-    .mini-browser-error {
-      display: none;
-      padding: 40px;
-      text-align: center;
-      color: #666;
-      background: white;
-      height: 300px;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-    .mini-browser-error .icon { font-size: 48px; margin-bottom: 10px; }
-    .mini-browser-error .open-link {
-      color: #1a73e8;
-      cursor: pointer;
-      font-weight: 600;
-      text-decoration: underline;
-    }
-    .mini-browser-error .open-link:hover { color: #1557b0; }
+    .login-float-header .float-actions button:hover { background: rgba(255,255,255,0.4); }
+    .login-float-header .float-actions .close-float:hover { background: #e53935; }
     
-    /* ===== TIMESTAMP DI TAB LOGIN ===== */
-    .login-timer {
-      font-size: 13px;
-      color: #1a73e8;
-      text-align: center;
-      padding: 8px;
-      background: #e8f0fe;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      display: none;
-      font-weight: 600;
+    .login-float-body {
+      padding: 12px 14px;
+      font-size: 12px;
     }
-    .login-timer.show { display: block; }
+    .login-float-body .session-info .row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px solid #f0f0f0; }
+    .login-float-body .session-info .row .label { font-weight: 600; color: #555; }
+    .login-float-body .session-info .row .value { color: #333; }
+    .login-float-body .session-id { background: #f0f0f0; padding: 4px 10px; border-radius: 4px; font-size: 10px; color: #666; text-align: center; margin-top: 8px; }
+    
+    #loginFloatingTimer.minimized { min-width: 160px; max-width: 200px; }
+    #loginFloatingTimer.minimized .login-float-body { display: none; }
+    #loginFloatingTimer.minimized .login-float-header .timer-badge { display: none; }
   </style>
 </head>
 <body>
@@ -221,6 +170,26 @@
 <!-- ===== DASHBOARD TL ===== -->
 <button class="dashboard-btn" onclick="showDashboard()">📊 Dashboard TL</button>
 
+<!-- ===== FLOATING TIMESTAMP (LOGIN) ===== -->
+<div id="loginFloatingTimer">
+  <div class="login-float-header" id="loginFloatHeader">
+    <span class="title">⏱️ Sesi</span>
+    <span class="timer-badge" id="loginFloatTime">00:00:00</span>
+    <div class="float-actions">
+      <button onclick="minimizeLoginFloat()" title="Minimize" id="loginMinimizeBtn">─</button>
+      <button class="close-float" onclick="closeLoginFloat()" title="Tutup">✕</button>
+    </div>
+  </div>
+  <div class="login-float-body">
+    <div class="session-info">
+      <div class="row"><span class="label">👤 Nama</span><span class="value" id="lfNama">-</span></div>
+      <div class="row"><span class="label">🏭 Line</span><span class="value" id="lfLine">-</span></div>
+      <div class="row"><span class="label">📌 Tipe</span><span class="value" id="lfType">-</span></div>
+    </div>
+    <div class="session-id" id="lfSessionId">🆔 ID: -</div>
+  </div>
+</div>
+
 <!-- ===== MAIN CONTAINER ===== -->
 <div class="container" id="mainContainer">
   <div class="header">
@@ -241,32 +210,9 @@
 
   <button class="btn-trial" id="btnTrial" onclick="openTrialModal()">🔬 Mode Trial</button>
 
-  <!-- ===== TIMESTAMP DI LOGIN ===== -->
-  <div class="login-timer" id="loginTimer">⏱️ Sesi Aktif: <span id="loginTimerDisplay">00:00:00</span> | 👤 <span id="loginTimerNama">-</span> | 📍 Line <span id="loginTimerLine">-</span></div>
-
   <!-- ===== TOMBOL KEMBALI KE BROWSER ===== -->
   <div id="backToBrowserContainer" style="display:none; text-align:center; margin:10px 0;">
     <button class="btn-back-browser" onclick="goBackToBrowser()">⬅️ Kembali ke Browser</button>
-  </div>
-
-  <!-- ===== MINI BROWSER PREVIEW ===== -->
-  <div class="mini-browser-container" id="miniBrowser">
-    <div class="mini-browser-toolbar">
-      <span class="search-engine-label">🔍 Bing</span>
-      <button class="nav-btn" onclick="miniGoBack()">◀</button>
-      <button class="nav-btn" onclick="miniGoForward()">▶</button>
-      <button class="nav-btn" onclick="miniRefresh()">⟳</button>
-      <button class="nav-btn" onclick="miniHome()">🏠</button>
-      <input class="address-bar" id="miniAddress" placeholder="Ketik URL atau search..." onkeydown="if(event.key==='Enter'){miniNavigate(this.value);}">
-      <button class="btn-go" onclick="miniNavigate(document.getElementById('miniAddress').value)">Go</button>
-      <button class="btn-close-preview" onclick="closeMiniBrowser()">✕</button>
-    </div>
-    <iframe class="mini-browser-iframe" id="miniIframe" src="about:blank"></iframe>
-    <div class="mini-browser-error" id="miniError">
-      <div class="icon">🔒</div>
-      <p>Situs tidak bisa ditampilkan di sini.</p>
-      <p><span class="open-link" onclick="openMiniInNewTab()">📂 Buka di Tab Baru</span></p>
-    </div>
   </div>
 
   <!-- ===== TABS ===== -->
@@ -323,9 +269,9 @@
   var codeCheckInterval = null;
   var currentTLName = null;
   var currentTLWH = '';
-  var miniHistory = [];
-  var miniHistoryIndex = -1;
-  var loginTimerInterval = null;
+  var loginFloatInterval = null;
+  var loginFloatMinimized = false;
+  var floatDragData = { isDragging: false, offsetX: 0, offsetY: 0 };
 
   // ============ FUNGSI UTAMA ============
   function updateClock() {
@@ -356,144 +302,92 @@
       document.getElementById('active-session-tab').classList.add('active');
       updateActiveSessionDisplay();
       checkAndShowBackToBrowser();
-      startLoginTimer();
     }
   }
 
-  // ============ LOGIN TIMER ============
-  function startLoginTimer() {
-    var timerEl = document.getElementById('loginTimer');
-    var displayEl = document.getElementById('loginTimerDisplay');
-    var namaEl = document.getElementById('loginTimerNama');
-    var lineEl = document.getElementById('loginTimerLine');
-    
+  // ============ FLOATING TIMESTAMP (LOGIN) ============
+  function showLoginFloatingTimer() {
+    var ft = document.getElementById('loginFloatingTimer');
+    ft.classList.add('show');
+    ft.classList.remove('minimized');
+    loginFloatMinimized = false;
+    document.getElementById('loginMinimizeBtn').textContent = '─';
+    updateLoginFloatTimer();
+    if (loginFloatInterval) clearInterval(loginFloatInterval);
+    loginFloatInterval = setInterval(updateLoginFloatTimer, 1000);
+  }
+
+  function updateLoginFloatTimer() {
     if (!currentSession) {
-      timerEl.classList.remove('show');
-      if (loginTimerInterval) {
-        clearInterval(loginTimerInterval);
-        loginTimerInterval = null;
+      document.getElementById('loginFloatingTimer').classList.remove('show');
+      if (loginFloatInterval) {
+        clearInterval(loginFloatInterval);
+        loginFloatInterval = null;
       }
       return;
     }
-    
-    timerEl.classList.add('show');
-    namaEl.textContent = currentSession.nama;
-    lineEl.textContent = currentSession.line;
-    
-    if (loginTimerInterval) {
-      clearInterval(loginTimerInterval);
-      loginTimerInterval = null;
-    }
-    
-    loginTimerInterval = setInterval(function() {
-      if (!currentSession) {
-        timerEl.classList.remove('show');
-        clearInterval(loginTimerInterval);
-        loginTimerInterval = null;
-        return;
-      }
-      var d = Math.floor((new Date() - currentSession.loginTime) / 1000);
-      var h = Math.floor(d / 3600);
-      var m = Math.floor((d % 3600) / 60);
-      var s = d % 60;
-      var timer = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
-      displayEl.textContent = timer;
-      namaEl.textContent = currentSession.nama;
-      lineEl.textContent = currentSession.line;
-    }, 1000);
+    var d = Math.floor((new Date() - currentSession.loginTime) / 1000);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor((d % 3600) / 60);
+    var s = d % 60;
+    var timer = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+    document.getElementById('loginFloatTime').textContent = timer;
+    document.getElementById('lfNama').textContent = currentSession.nama;
+    document.getElementById('lfLine').textContent = currentSession.line;
+    document.getElementById('lfType').textContent = currentSession.type;
+    document.getElementById('lfSessionId').textContent = '🆔 ID: ' + currentSession.id;
   }
 
-  // ============ MINI BROWSER ============
-  function openMiniBrowser(url) {
-    var container = document.getElementById('miniBrowser');
-    container.classList.add('show');
-    if (url) {
-      miniNavigate(url);
+  function minimizeLoginFloat() {
+    var ft = document.getElementById('loginFloatingTimer');
+    loginFloatMinimized = !loginFloatMinimized;
+    if (loginFloatMinimized) {
+      ft.classList.add('minimized');
+      document.getElementById('loginMinimizeBtn').textContent = '□';
     } else {
-      miniNavigate('https://www.bing.com');
+      ft.classList.remove('minimized');
+      document.getElementById('loginMinimizeBtn').textContent = '─';
     }
   }
 
-  function closeMiniBrowser() {
-    document.getElementById('miniBrowser').classList.remove('show');
-    document.getElementById('miniError').style.display = 'none';
-  }
-
-  function miniNavigate(url) {
-    if (!url) return;
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = 'https://www.bing.com/search?q=' + encodeURIComponent(url);
-    }
-    var address = document.getElementById('miniAddress');
-    var iframe = document.getElementById('miniIframe');
-    var error = document.getElementById('miniError');
-    
-    address.value = url;
-    error.style.display = 'none';
-    iframe.style.display = 'block';
-    iframe.src = url;
-    
-    iframe.onload = function() {
-      try {
-        var doc = iframe.contentDocument || iframe.contentWindow.document;
-        if (doc && doc.body) {
-          var html = doc.body.innerHTML || '';
-          if (html.indexOf('ERR_BLOCKED_BY_X_FRAME_OPTIONS') > -1 || 
-              html.indexOf('refused to connect') > -1) {
-            error.style.display = 'flex';
-            iframe.style.display = 'none';
-          }
-        }
-      } catch(e) {}
-    };
-    
-    iframe.onerror = function() {
-      error.style.display = 'flex';
-      iframe.style.display = 'none';
-    };
-    
-    if (miniHistoryIndex < miniHistory.length - 1) {
-      miniHistory = miniHistory.slice(0, miniHistoryIndex + 1);
-    }
-    miniHistory.push(url);
-    miniHistoryIndex = miniHistory.length - 1;
-  }
-
-  function openMiniInNewTab() {
-    var url = document.getElementById('miniAddress').value;
-    if (url) {
-      window.open(url, '_blank');
+  function closeLoginFloat() {
+    document.getElementById('loginFloatingTimer').classList.remove('show');
+    if (loginFloatInterval) {
+      clearInterval(loginFloatInterval);
+      loginFloatInterval = null;
     }
   }
 
-  function miniGoBack() {
-    if (miniHistoryIndex > 0) {
-      miniHistoryIndex--;
-      var url = miniHistory[miniHistoryIndex];
-      document.getElementById('miniAddress').value = url;
-      document.getElementById('miniIframe').src = url;
-    }
-  }
+  // ============ DRAG FLOATING ============
+  document.getElementById('loginFloatHeader').addEventListener('mousedown', function(e) {
+    if (e.target.tagName === 'BUTTON') return;
+    var ft = document.getElementById('loginFloatingTimer');
+    var rect = ft.getBoundingClientRect();
+    floatDragData.isDragging = true;
+    floatDragData.offsetX = e.clientX - rect.left;
+    floatDragData.offsetY = e.clientY - rect.top;
+    ft.style.cursor = 'grabbing';
+  });
 
-  function miniGoForward() {
-    if (miniHistoryIndex < miniHistory.length - 1) {
-      miniHistoryIndex++;
-      var url = miniHistory[miniHistoryIndex];
-      document.getElementById('miniAddress').value = url;
-      document.getElementById('miniIframe').src = url;
-    }
-  }
+  document.addEventListener('mousemove', function(e) {
+    if (!floatDragData.isDragging) return;
+    var ft = document.getElementById('loginFloatingTimer');
+    var newX = e.clientX - floatDragData.offsetX;
+    var newY = e.clientY - floatDragData.offsetY;
+    newX = Math.max(0, Math.min(newX, window.innerWidth - ft.offsetWidth));
+    newY = Math.max(0, Math.min(newY, window.innerHeight - ft.offsetHeight));
+    ft.style.left = newX + 'px';
+    ft.style.top = newY + 'px';
+    ft.style.right = 'auto';
+    ft.style.bottom = 'auto';
+  });
 
-  function miniRefresh() {
-    var iframe = document.getElementById('miniIframe');
-    if (iframe.src && iframe.src !== 'about:blank') {
-      iframe.src = iframe.src;
+  document.addEventListener('mouseup', function() {
+    if (floatDragData.isDragging) {
+      floatDragData.isDragging = false;
+      document.getElementById('loginFloatingTimer').style.cursor = 'default';
     }
-  }
-
-  function miniHome() {
-    miniNavigate('https://www.bing.com');
-  }
+  });
 
   // ============ CEK & TAMPILKAN TOMBOL KEMBALI ============
   function checkAndShowBackToBrowser() {
@@ -504,13 +398,13 @@
         var p = JSON.parse(s);
         if (p && p.id) {
           container.style.display = 'block';
-          openMiniBrowser('https://www.bing.com');
+          showLoginFloatingTimer();
           return;
         }
       } catch(e) {}
     }
     container.style.display = 'none';
-    closeMiniBrowser();
+    closeLoginFloat();
   }
 
   // ============ KEMBALI KE BROWSER ============
@@ -614,7 +508,6 @@
         updateActiveSessionDisplay();
         switchTab('active-session');
         checkAndShowBackToBrowser();
-        startLoginTimer();
         return true;
       } catch(e) {
         localStorage.removeItem('packingSession');
@@ -680,7 +573,6 @@
         e.target.reset();
         saveSession();
         checkAndShowBackToBrowser();
-        startLoginTimer();
       } else {
         showMessage(r.message,'error');
       }
@@ -750,7 +642,6 @@
         if(codeCheckInterval){clearInterval(codeCheckInterval);codeCheckInterval=null}
         document.getElementById('code-display').style.display='none';
         checkAndShowBackToBrowser();
-        startLoginTimer();
       } else {
         showMessage(r.message,'error');
       }
@@ -877,12 +768,7 @@
         updateActiveSessionDisplay();
         switchTab('staff');
         document.getElementById('backToBrowserContainer').style.display = 'none';
-        closeMiniBrowser();
-        if (loginTimerInterval) {
-          clearInterval(loginTimerInterval);
-          loginTimerInterval = null;
-        }
-        document.getElementById('loginTimer').classList.remove('show');
+        closeLoginFloat();
         showMessage('⚠️ Sesi telah diakhiri oleh Team Leader.', 'warning');
       } else {
         alert('⚠️ Tidak bisa mengecek session (data server kosong)');
@@ -903,12 +789,7 @@
         currentSession = null;
         updateActiveSessionDisplay();
         document.getElementById('backToBrowserContainer').style.display = 'none';
-        closeMiniBrowser();
-        if (loginTimerInterval) {
-          clearInterval(loginTimerInterval);
-          loginTimerInterval = null;
-        }
-        document.getElementById('loginTimer').classList.remove('show');
+        closeLoginFloat();
         setTimeout(function(){switchTab('staff')},2000);
         document.querySelectorAll('form').forEach(function(f){ f.reset(); });
         document.getElementById('wh-display').textContent = 'Pilih WH';
