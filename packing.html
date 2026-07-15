@@ -622,7 +622,7 @@
     });
   }
 
-  // ============ AUTO CHECK SESSION (SETIAP 10 DETIK) ============
+  // ============ AUTO CHECK SESSION ============
   function startAutoCheckSession() {
     if (sessionCheckInterval) {
       clearInterval(sessionCheckInterval);
@@ -638,7 +638,6 @@
       
       var s = localStorage.getItem('packingSession');
       if (!s) {
-        // Session di localStorage hilang → logout otomatis
         showToast('⚠️ Session telah berakhir!');
         clearSavedSession();
         currentSession = null;
@@ -654,7 +653,6 @@
       try {
         var p = JSON.parse(s);
         if (p.id !== currentSession.id) {
-          // Session ID berbeda → logout
           showToast('⚠️ Session telah berakhir!');
           clearSavedSession();
           currentSession = null;
@@ -666,7 +664,6 @@
           }, 1500);
         }
       } catch(e) {
-        // Error parsing → logout
         showToast('⚠️ Session error!');
         clearSavedSession();
         currentSession = null;
@@ -677,7 +674,7 @@
           goBackToLogin();
         }, 1500);
       }
-    }, 10000); // Cek setiap 10 detik
+    }, 10000);
   }
 
   function clearSavedSession() {
@@ -736,10 +733,8 @@
     if (durationInterval) clearInterval(durationInterval);
     durationInterval = setInterval(updateFloatTimer, 1000);
 
-    // Start auto check session (deteksi logout dari tab lain)
     startAutoCheckSession();
 
-    // Buka Bing di browser
     setTimeout(function() {
       browserNavigate('https://www.bing.com');
     }, 300);
