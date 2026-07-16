@@ -221,21 +221,17 @@
 
   // ============ SESSION TIMER ============
   function startSessionTimer() {
-    // Timer ini akan berjalan dan mengupdate display di session-card
     if (sessionTimerInterval) {
       clearInterval(sessionTimerInterval);
       sessionTimerInterval = null;
     }
-    
     if (!currentSession) return;
-    
     sessionTimerInterval = setInterval(function() {
       if (!currentSession) {
         clearInterval(sessionTimerInterval);
         sessionTimerInterval = null;
         return;
       }
-      // Update display session-card
       updateActiveSessionDisplay();
     }, 1000);
   }
@@ -509,7 +505,7 @@
     }).catch(function(e){showMessage('Gagal: '+e.message,'error')})
   }
 
-  // ============ UPDATE DISPLAY (HANYA 1 TIMESTAMP) ============
+  // ============ UPDATE DISPLAY ============
   function updateActiveSessionDisplay() {
     var c = document.getElementById('active-session-info');
     if(!currentSession){
@@ -666,12 +662,16 @@
     })
   }
 
-  // ============ DASHBOARD ============
+  // ============ DASHBOARD TL ============
   function showDashboard() {
     var tl = prompt('👨‍💼 Nama Team Leader:');
     var pw = prompt('🔑 Password:');
     if(!tl||!pw) return;
-    fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'action=verifyTL&data='+encodeURIComponent(JSON.stringify({tlName:tl.trim(),password:pw.trim()}))})
+    fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'action=verifyTL&data='+encodeURIComponent(JSON.stringify({tlName:tl.trim(),password:pw.trim()}))
+    })
     .then(function(r){return r.json()})
     .then(function(v){
       if(!v.success){ alert('❌ '+v.message); return; }
@@ -680,7 +680,9 @@
       localStorage.setItem('tlPw', pw.trim());
       localStorage.setItem('tlWH', v.warehouse);
       localStorage.setItem('openDashboard', 'true');
-      window.open(API_URL, '_blank');
+      // Buka dashboard di tab baru dengan URL yang sama (bukan API_URL)
+      var dashboardUrl = window.location.href.split('?')[0];
+      window.open(dashboardUrl, '_blank');
     })
   }
 
