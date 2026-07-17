@@ -27,28 +27,9 @@
       position: relative;
     }
     
-    .logo { font-size: 64px; margin-bottom: 15px; }
-    h1 { color: #1a73e8; font-size: 24px; margin-bottom: 5px; }
-    .subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
-    
-    .session-info {
-      background: #f8fafc;
-      padding: 15px;
-      border-radius: 12px;
-      margin: 15px 0;
-      border-left: 4px solid #1a73e8;
-      text-align: left;
-    }
-    .session-info .row {
-      display: flex;
-      justify-content: space-between;
-      padding: 4px 0;
-      border-bottom: 1px solid #f0f0f0;
-      font-size: 14px;
-    }
-    .session-info .row:last-child { border-bottom: none; }
-    .session-info .label { font-weight: 600; color: #555; }
-    .session-info .value { color: #333; }
+    .logo { font-size: 48px; margin-bottom: 10px; }
+    h1 { color: #1a73e8; font-size: 20px; margin-bottom: 2px; }
+    .subtitle { color: #666; font-size: 12px; margin-bottom: 15px; }
     
     .timer {
       font-size: 36px;
@@ -57,14 +38,45 @@
       margin: 10px 0;
     }
     
+    .session-info {
+      background: #f8fafc;
+      padding: 12px 15px;
+      border-radius: 12px;
+      margin: 10px 0;
+      border-left: 4px solid #1a73e8;
+      text-align: left;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px 15px;
+    }
+    .session-info .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0;
+      font-size: 13px;
+    }
+    .session-info .label { font-weight: 600; color: #555; }
+    .session-info .value { color: #333; }
+    .session-info .full { grid-column: 1 / -1; }
+    
+    .session-id {
+      background: #f0f0f0;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #666;
+      margin-top: 8px;
+      display: inline-block;
+    }
+    
     .url-input-group {
       display: flex;
       gap: 8px;
-      margin: 15px 0;
+      margin: 12px 0;
     }
     .url-input-group input {
       flex: 1;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border: 2px solid #e0e0e0;
       border-radius: 10px;
       font-size: 14px;
@@ -72,7 +84,7 @@
     }
     .url-input-group input:focus { border-color: #1a73e8; }
     .url-input-group button {
-      padding: 12px 24px;
+      padding: 10px 20px;
       background: #1a73e8;
       color: white;
       border: none;
@@ -86,19 +98,19 @@
     
     .btn-group {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
-      margin: 10px 0;
+      margin: 8px 0;
     }
     .btn-group button {
       flex: 1;
-      padding: 10px 16px;
+      padding: 8px 12px;
       border: none;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
-      min-width: 70px;
+      min-width: 60px;
     }
     .btn-group .btn-home { background: #1a73e8; color: white; }
     .btn-group .btn-back { background: #795548; color: white; }
@@ -113,86 +125,88 @@
       transform: translateX(-50%);
       background: #e53935;
       color: white;
-      padding: 12px 24px;
+      padding: 10px 20px;
       border-radius: 10px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       z-index: 9999;
       display: none;
       box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
     .toast.show { display: block; }
     
-    .session-id {
-      background: #f0f0f0;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 11px;
-      color: #666;
-      margin-top: 10px;
-    }
-    
     .history-list {
-      margin-top: 10px;
+      margin-top: 8px;
       text-align: left;
-      max-height: 150px;
+      max-height: 120px;
       overflow-y: auto;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 8px;
     }
     .history-list .item {
-      padding: 4px 8px;
+      padding: 3px 8px;
       font-size: 12px;
       color: #1a73e8;
       cursor: pointer;
       border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
     }
     .history-list .item:hover { background: #e8f0fe; }
+    .history-list .item .del {
+      color: #e53935;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .history-list .item .del:hover { opacity: 0.7; }
     
     .refresh-info {
-      font-size: 11px;
+      font-size: 10px;
       color: #999;
       margin-top: 10px;
     }
     
-    /* ===== FLOATING TIMESTAMP (DI DALAM HALAMAN) ===== */
+    /* ===== FLOATING TIMESTAMP ===== */
     .float-timer {
       position: fixed;
       bottom: 20px;
       right: 20px;
       background: white;
-      border-radius: 16px;
+      border-radius: 14px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.3);
       z-index: 9997;
       border: 1px solid #e0e0e0;
-      min-width: 200px;
-      max-width: 280px;
+      min-width: 160px;
+      max-width: 220px;
       overflow: hidden;
       transition: all 0.3s;
       animation: slideUp 0.3s ease;
       cursor: move;
       user-select: none;
     }
+    .float-timer.hidden { display: none; }
     @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     
     .float-header {
       background: #1a73e8;
       color: white;
-      padding: 6px 12px;
+      padding: 5px 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .float-header .title { font-weight: 700; font-size: 11px; }
-    .float-header .timer-badge { font-size: 13px; font-weight: 700; background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 12px; }
-    .float-header .float-actions { display: flex; gap: 4px; }
+    .float-header .title { font-weight: 700; font-size: 10px; }
+    .float-header .timer-badge { font-size: 12px; font-weight: 700; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; }
+    .float-header .float-actions { display: flex; gap: 3px; }
     .float-header .float-actions button {
       background: rgba(255,255,255,0.2);
       border: none;
       color: white;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 10px;
+      font-size: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -204,8 +218,8 @@
     .float-header .float-actions .close-float:hover { background: #e53935; }
     
     .float-body {
-      padding: 10px 12px;
-      font-size: 12px;
+      padding: 6px 10px;
+      font-size: 11px;
     }
     .float-body .row {
       display: flex;
@@ -218,25 +232,26 @@
     .float-body .value { color: #333; }
     .float-body .session-id-small {
       background: #f0f0f0;
-      padding: 3px 8px;
+      padding: 2px 6px;
       border-radius: 4px;
-      font-size: 10px;
+      font-size: 9px;
       color: #666;
       text-align: center;
-      margin-top: 6px;
+      margin-top: 4px;
     }
     
-    .float-timer.minimized { min-width: 120px; max-width: 150px; }
+    .float-timer.minimized { min-width: 90px; max-width: 110px; }
     .float-timer.minimized .float-body { display: none; }
     .float-timer.minimized .float-header .timer-badge { display: none; }
-    .float-timer.minimized .float-header .title { font-size: 11px; }
+    .float-timer.minimized .float-header .title { font-size: 10px; }
     
     @media (max-width: 500px) {
       .container { padding: 20px; }
       .timer { font-size: 28px; }
       .url-input-group { flex-direction: column; }
       .url-input-group button { width: 100%; }
-      .float-timer { min-width: 160px; right: 10px; bottom: 10px; }
+      .session-info { grid-template-columns: 1fr; }
+      .float-timer { min-width: 140px; right: 10px; bottom: 10px; }
     }
   </style>
 </head>
@@ -245,7 +260,7 @@
 <!-- ===== TOAST ===== -->
 <div id="toast" class="toast">⚠️ Notifikasi</div>
 
-<!-- ===== FLOATING TIMESTAMP (DI DALAM HALAMAN) ===== -->
+<!-- ===== FLOATING TIMESTAMP ===== -->
 <div class="float-timer" id="floatTimer">
   <div class="float-header" id="floatHeader">
     <span class="title">⏱️ Sesi</span>
@@ -277,7 +292,7 @@
     <div class="row"><span class="label">👤 Nama</span><span class="value" id="sNama">-</span></div>
     <div class="row"><span class="label">🏭 Line</span><span class="value" id="sLine">-</span></div>
     <div class="row"><span class="label">📌 Tipe</span><span class="value" id="sType">-</span></div>
-    <div class="row"><span class="label">🕐 Login</span><span class="value" id="sLogin">-</span></div>
+    <div class="row full"><span class="label">🕐 Login</span><span class="value" id="sLogin">-</span></div>
   </div>
   <div class="session-id" id="sSessionId">🆔 Session ID: -</div>
   
@@ -301,13 +316,13 @@
   </div>
   
   <!-- History -->
-  <div style="margin-top:15px;font-size:12px;color:#999;text-align:left;">
-    📂 History: <span id="historyCount">0</span>
-    <button onclick="clearHistory()" style="background:transparent;border:none;color:#e53935;cursor:pointer;font-size:11px;">✕ Hapus</button>
+  <div style="margin-top:12px;font-size:12px;color:#999;text-align:left;display:flex;justify-content:space-between;align-items:center;">
+    <span>📂 History: <span id="historyCount">0</span></span>
+    <button onclick="clearHistory()" style="background:transparent;border:none;color:#e53935;cursor:pointer;font-size:11px;font-weight:600;">✕ Hapus Semua</button>
   </div>
   <div class="history-list" id="historyList"></div>
   
-  <div class="refresh-info">💡 Refresh halaman: session tetap aktif (disimpan di localStorage)</div>
+  <div class="refresh-info">💡 Refresh aman - session tersimpan di localStorage</div>
 </div>
 
 <script>
@@ -317,11 +332,9 @@
 
   var currentSession = null;
   var timerInterval = null;
-  var floatTimerInterval = null;
   var historyUrls = [];
   var checkInterval = null;
   var floatMinimized = false;
-  var floatVisible = true;
   var floatDragData = { isDragging: false, offsetX: 0, offsetY: 0 };
 
   // ============ TOAST ============
@@ -335,8 +348,6 @@
 
   // ============ RESTORE SESSION ============
   function restoreSession() {
-    console.log('🔍 Mencoba restore session...');
-    
     var s = localStorage.getItem('packingSession');
     if (s) {
       try {
@@ -350,11 +361,9 @@
             teamLeader: p.teamLeader || null,
             loginTime: new Date(p.loginTime)
           };
-          console.log('✅ Session restored from localStorage:', currentSession);
           return true;
         }
       } catch(e) {
-        console.log('⚠️ Error parsing localStorage:', e);
         localStorage.removeItem('packingSession');
       }
     }
@@ -384,11 +393,9 @@
         loginTime: loginTime || new Date().toISOString()
       };
       localStorage.setItem('packingSession', JSON.stringify(dataToSave));
-      console.log('✅ Session restored from URL:', dataToSave);
       return true;
     }
 
-    console.log('❌ No session found');
     return false;
   }
 
@@ -402,7 +409,6 @@
     var s = d % 60;
     var timer = (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
     
-    // Timer besar
     document.getElementById('timerDisplay').textContent = timer;
     document.getElementById('sNama').textContent = currentSession.nama;
     document.getElementById('sLine').textContent = currentSession.line;
@@ -410,7 +416,6 @@
     document.getElementById('sLogin').textContent = currentSession.loginTime.toLocaleString('id-ID');
     document.getElementById('sSessionId').textContent = '🆔 Session ID: ' + currentSession.id;
     
-    // Floating timer
     document.getElementById('floatTime').textContent = timer;
     document.getElementById('fNama').textContent = currentSession.nama;
     document.getElementById('fLine').textContent = currentSession.line;
@@ -419,6 +424,14 @@
   }
 
   // ============ FLOATING TIMER ============
+  function showFloat() {
+    document.getElementById('floatTimer').classList.remove('hidden');
+  }
+
+  function hideFloat() {
+    document.getElementById('floatTimer').classList.add('hidden');
+  }
+
   function minimizeFloat() {
     var ft = document.getElementById('floatTimer');
     floatMinimized = !floatMinimized;
@@ -429,16 +442,6 @@
       ft.classList.remove('minimized');
       document.getElementById('floatMinBtn').textContent = '─';
     }
-  }
-
-  function hideFloat() {
-    document.getElementById('floatTimer').style.display = 'none';
-    floatVisible = false;
-  }
-
-  function showFloat() {
-    document.getElementById('floatTimer').style.display = 'block';
-    floatVisible = true;
   }
 
   // ============ DRAG FLOATING ============
@@ -488,7 +491,7 @@
     
     var newTab = window.open(targetUrl, '_blank');
     if (!newTab) {
-      alert('⚠️ Popup diblokir! Izinkan popup untuk membuka browser.');
+      alert('⚠️ Popup diblokir! Izinkan popup untuk membuka browser.\n\nKlik ikon popup di address bar dan pilih "Always allow".');
       showToast('⚠️ Popup diblokir! Izinkan popup.');
       return;
     }
@@ -509,22 +512,25 @@
     count.textContent = historyUrls.length;
     
     if (historyUrls.length === 0) {
-      list.innerHTML = '<div style="color:#ccc;text-align:center;padding:10px;">Belum ada history</div>';
+      list.innerHTML = '<div style="color:#ccc;text-align:center;padding:8px;font-size:12px;">Belum ada history</div>';
       return;
     }
     
     var html = '';
     for (var i = historyUrls.length - 1; i >= 0; i--) {
       var url = historyUrls[i];
-      var displayUrl = url.length > 50 ? url.substring(0, 50) + '...' : url;
+      var displayUrl = url.length > 40 ? url.substring(0, 40) + '...' : url;
       html += '<div class="item" onclick="openUrl(\'' + url + '\')">📄 ' + displayUrl + '</div>';
     }
     list.innerHTML = html;
   }
 
   function clearHistory() {
+    if (historyUrls.length === 0) return;
+    if (!confirm('Hapus semua history?')) return;
     historyUrls = [];
     updateHistory();
+    localStorage.removeItem('browserHistory');
     showToast('🗑️ History dihapus');
   }
 
@@ -694,14 +700,22 @@
     });
   }
 
+  // ============ SAVE HISTORY ============
+  function saveHistory() {
+    try {
+      localStorage.setItem('browserHistory', JSON.stringify(historyUrls));
+    } catch(e) {}
+  }
+
   // ============ INIT ============
   function init() {
-    console.log('🚀 INIT PACKING.HTML');
-    
     if (!restoreSession()) {
       document.body.innerHTML = '<div style="text-align:center;padding:50px;background:white;border-radius:20px;max-width:400px;margin:auto;"><p style="font-size:48px;">🔒</p><h3>Tidak ada session aktif</h3><p style="color:#666;margin-top:10px;">Silakan login dari halaman utama.</p><button onclick="goBackToLogin()" style="margin-top:20px;background:#1a73e8;color:white;border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-weight:700;width:auto;">Kembali ke Login</button></div>';
       return;
     }
+
+    // Tampilkan floating timer
+    showFloat();
 
     updateDisplay();
     if (timerInterval) clearInterval(timerInterval);
@@ -720,18 +734,6 @@
     document.getElementById('urlInput').focus();
     showToast('🌐 Browser siap digunakan');
   }
-
-  function saveHistory() {
-    try {
-      localStorage.setItem('browserHistory', JSON.stringify(historyUrls));
-    } catch(e) {}
-  }
-
-  var originalUpdateHistory = updateHistory;
-  updateHistory = function() {
-    originalUpdateHistory();
-    saveHistory();
-  };
 
   window.onload = init;
 </script>
