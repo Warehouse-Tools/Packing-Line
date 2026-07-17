@@ -231,13 +231,16 @@
     t._t = setTimeout(function(){ t.className = 'toast'; }, 3000);
   }
 
-  // ============ RESTORE SESSION (PRIORITAS LOCALSTORAGE) ============
+  // ============ RESTORE SESSION ============
   function restoreSession() {
+    console.log('🔍 Mencoba restore session...');
+    
     // === PRIORITAS 1: CEK LOCALSTORAGE ===
     var s = localStorage.getItem('packingSession');
     if (s) {
       try {
         var p = JSON.parse(s);
+        console.log('📦 Data dari localStorage:', p);
         if (p && p.id && p.nama) {
           currentSession = {
             id: p.id,
@@ -247,7 +250,7 @@
             teamLeader: p.teamLeader || null,
             loginTime: new Date(p.loginTime)
           };
-          console.log('✅ Session restored from localStorage');
+          console.log('✅ Session restored from localStorage:', currentSession);
           return true;
         }
       } catch(e) {
@@ -263,7 +266,6 @@
     var line = params.get('line');
     var type = params.get('type');
     var loginTime = params.get('loginTime');
-    var teamLeader = params.get('teamLeader');
 
     if (sessionId && nama && line && type) {
       currentSession = {
@@ -271,29 +273,33 @@
         nama: nama,
         line: line,
         type: type,
-        teamLeader: teamLeader || null,
+        teamLeader: params.get('teamLeader') || null,
         loginTime: new Date(loginTime || Date.now())
       };
       // Simpan ke localStorage agar tahan refresh
-      localStorage.setItem('packingSession', JSON.stringify({
+      var dataToSave = {
         id: sessionId,
         nama: nama,
         line: line,
         type: type,
-        teamLeader: teamLeader || null,
+        teamLeader: params.get('teamLeader') || null,
         loginTime: loginTime || new Date().toISOString()
-      }));
-      console.log('✅ Session restored from URL parameter');
+      };
+      localStorage.setItem('packingSession', JSON.stringify(dataToSave));
+      console.log('✅ Session restored from URL, saved to localStorage:', dataToSave);
       return true;
     }
 
-    console.log('❌ No session found');
+    console.log('❌ No session found anywhere');
     return false;
   }
 
   // ============ UPDATE DISPLAY ============
   function updateDisplay() {
-    if (!currentSession) return;
+    if (!currentSession) {
+      console.log('⚠️ No currentSession, skipping update');
+      return;
+    }
     
     var d = Math.floor((new Date() - currentSession.loginTime) / 1000);
     var h = Math.floor(d / 3600);
@@ -533,10 +539,15 @@
 
   // ============ INIT ============
   function init() {
+    console.log('🚀 INIT PACKING.HTML');
+    
     if (!restoreSession()) {
+      console.log('❌ No session, redirect to login...');
       document.body.innerHTML = '<div style="text-align:center;padding:50px;background:white;border-radius:20px;max-width:400px;margin:auto;"><p style="font-size:48px;">🔒</p><h3>Tidak ada session aktif</h3><p style="color:#666;margin-top:10px;">Silakan login dari halaman utama.</p><button onclick="goBackToLogin()" style="margin-top:20px;background:#1a73e8;color:white;border:none;padding:12px 30px;border-radius:8px;cursor:pointer;font-weight:700;width:auto;">Kembali ke Login</button></div>';
       return;
     }
+
+    console.log('✅ Session restored successfully:', currentSession);
 
     // Update display
     updateDisplay();
